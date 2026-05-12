@@ -31,7 +31,17 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Verificar conformidade com `.specify/memory/constitution.md` (Savings Tracker Platform):
+
+- **Produto:** Cada capacidade responde claramente “Isso ajuda o usuário a economizar melhor?”; escopo evita funcionalidade só por volume ou aparência.
+- **Clareza e confiança:** Dashboard e estados principais comunicam progresso, metas ativas/concluídas e depósitos recentes de forma imediata e consistente; sem ambiguidade aceitável em dados financeiros.
+- **UX:** Fluxos de criar meta, registrar depósito e acompanhar progresso minimizam passos; validação e erros são explícitos (sem “erro inesperado” como padrão).
+- **UI:** Hierarquia, progresso visual, contraste e consistência prevalecem sobre decoração; gráficos e barras servem à leitura.
+- **Conteúdo:** Textos orientam ação e estado; sem placeholders genéricos ou copy de protótipo na entrega.
+- **Mobile-first:** Layout e interação são concebidos primeiro para telas pequenas e uso com uma mão.
+- **Acessibilidade:** Teclado, foco visível, semântica, contraste, labels e leitores de tela; hover com equivalente de foco.
+- **Performance:** Carregamento e interação fluidos; evitar animação e renderização pesadas sem necessidade.
+- **Técnico:** Código legível, componentizado, separação lógica/apresentação, estados e validação de formulários tratados de forma profissional; sem hacks como solução final.
 
 ## Project Structure
 

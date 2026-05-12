@@ -152,10 +152,13 @@ Examples of foundational tasks (adjust based on your project):
 
 - [ ] TXXX [P] Documentation updates in docs/
 - [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Performance optimization across all stories
+- [ ] TXXX Performance optimization across all stories (constitution: percepção de agilidade e estabilidade)
 - [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
 - [ ] TXXX Security hardening
 - [ ] TXXX Run quickstart.md validation
+- [ ] TXXX [P] Mobile-first pass: breakpoints, toque, CTAs e leitura em telas pequenas
+- [ ] TXXX [P] Acessibilidade: teclado, foco visível, contraste, labels e smoke com leitor de tela onde aplicável
+- [ ] TXXX [P] Conteúdo de UI: revisar mensagens vazias, erros e estados concluídos contra princípio de conteúdo
 
 ---
 
