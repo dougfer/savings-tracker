@@ -13,7 +13,7 @@ module.exports = function (api) {
         {
           root: ['./'],
           alias: { '@': './src' },
-          extensions: ['.tsx', '.ts', '.jsx', '.js', '.json'],
+          extensions: ['.tsx', '.ts', '.jsx', '.js', '.json', '.svg'],
         },
       ],
       'react-native-reanimated/plugin',

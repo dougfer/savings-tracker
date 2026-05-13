@@ -1,0 +1,12 @@
+export { default as AlertCircleIcon } from './alert-circle.svg';
+export { default as ArrowDownIcon } from './arrow-down.svg';
+export { default as CalendarIcon } from './calendar.svg';
+export { default as CheckIcon } from './check.svg';
+export { default as ChevronLeftIcon } from './chevron-left.svg';
+export { default as CurrencyDollarIcon } from './currency-dollar.svg';
+export { default as FilterIcon } from './filter-icon.svg';
+export { default as Mail01Icon } from './mail-01.svg';
+export { default as NoGoalsIcon } from './no-goals-icon.svg';
+export { default as PlusIcon } from './plus.svg';
+export { default as SortByIcon } from './sort-by.svg';
+export { default as XCloseIcon } from './x-close.svg';
