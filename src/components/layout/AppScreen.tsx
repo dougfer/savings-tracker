@@ -10,7 +10,7 @@ type AppScreenProps = {
 export function AppScreen({ children }: AppScreenProps) {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <Box flex={1} className="bg-white px-4 pt-4">
+      <Box flex={1} className="bg-background px-4 pt-4">
         {children}
       </Box>
     </SafeAreaView>
