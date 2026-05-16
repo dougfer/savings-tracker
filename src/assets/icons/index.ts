@@ -10,3 +10,4 @@ export { default as NoGoalsIcon } from './no-goals-icon.svg';
 export { default as PlusIcon } from './plus.svg';
 export { default as SortByIcon } from './sort-by.svg';
 export { default as XCloseIcon } from './x-close.svg';
+export { default as VectorIcon } from './vector.svg';

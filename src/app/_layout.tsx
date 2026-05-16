@@ -1,6 +1,8 @@
 import '../../global.css';
 import 'react-native-reanimated';
-import { useEffect, useLayoutEffect } from 'react';
+import '@/lib/gluestack/gluestack-css-interop';
+import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -16,6 +18,9 @@ export default function RootLayout() {
   useEffect(() => {
     if (fontsLoaded || fontError) {
       void SplashScreen.hideAsync();
+      if (Platform.OS === 'web') {
+        document.body.style.opacity = '1';
+      }
     }
   }, [fontsLoaded, fontError]);
 
