@@ -1,6 +1,6 @@
 import '../../global.css';
 import 'react-native-reanimated';
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';

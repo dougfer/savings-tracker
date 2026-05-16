@@ -5,4 +5,4 @@ export { AppAvatar } from './app-avatar';
 export { AppProgressBar } from './app-progress-bar';
 export { AppDropdownMenu } from './app-dropdown-menu';
 export { AppModal } from './app-modal';
-export { AppText } from './AppText';
+export { AppText } from './app-text';

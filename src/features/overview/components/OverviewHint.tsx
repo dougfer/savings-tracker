@@ -1,4 +1,4 @@
-import { AppText } from '@/components/ui/AppText';
+import { AppText } from '@/components/ui';
 
 /** Feature-local copy for Overview only — not reused across features (US2 boundary demo). */
 export function OverviewHint() {
