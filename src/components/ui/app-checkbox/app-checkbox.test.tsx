@@ -2,43 +2,72 @@ import React from 'react';
 
 import { render, screen, fireEvent } from '@testing-library/react-native';
 
-import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
-
 import { AppCheckbox } from './app-checkbox';
 
 // Minimal stand-in for CheckIcon in tests
 const CheckIcon = () => null;
 
-function wrap(node: React.ReactElement) {
-  return <GluestackAppProvider>{node}</GluestackAppProvider>;
-}
+jest.mock('@gluestack-ui/core/checkbox/creator', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const ReactNative = require('react-native');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const R = require('react');
+
+  return {
+    createCheckbox: () => {
+      function FakeCheckbox({ children, isDisabled, isInvalid, isChecked, onChange, ...props }: any) {
+        return R.createElement(
+          ReactNative.Pressable,
+          {
+            role: 'checkbox',
+            disabled: isDisabled,
+            accessibilityState: { checked: !!isChecked, disabled: !!isDisabled },
+            onPress: () => !isDisabled && onChange?.(!isChecked),
+            ...props,
+          },
+          children,
+        );
+      }
+      FakeCheckbox.Indicator = R.forwardRef(({ children, ...props }: any, ref: any) =>
+        R.createElement(ReactNative.View, { ...props, ref }, children),
+      );
+      FakeCheckbox.Icon = R.forwardRef((props: any, ref: any) =>
+        R.createElement(ReactNative.View, { ...props, ref }),
+      );
+      FakeCheckbox.Label = R.forwardRef(({ children, ...props }: any, ref: any) =>
+        R.createElement(ReactNative.Text, { ...props, ref }, children),
+      );
+      FakeCheckbox.Group = R.forwardRef(({ children, ...props }: any, ref: any) =>
+        R.createElement(ReactNative.View, { ...props, ref }, children),
+      );
+      FakeCheckbox.displayName = 'Checkbox';
+      return FakeCheckbox;
+    },
+  };
+});
 
 describe('AppCheckbox', () => {
   describe('rendering', () => {
     it('renders Indicator and Label subparts', () => {
       render(
-        wrap(
-          <AppCheckbox value="terms">
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>I agree</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="terms">
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>I agree</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       expect(screen.getByText('I agree')).toBeTruthy();
     });
 
     it.each(['sm', 'md', 'lg'] as const)('renders %s size', (size) => {
       render(
-        wrap(
-          <AppCheckbox value="test" size={size} testID={`cb-${size}`}>
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>{size}</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="test" size={size} testID={`cb-${size}`}>
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>{size}</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       expect(screen.getByTestId(`cb-${size}`)).toBeTruthy();
     });
@@ -48,14 +77,12 @@ describe('AppCheckbox', () => {
     it('calls onChange when pressed', () => {
       const onChange = jest.fn();
       render(
-        wrap(
-          <AppCheckbox value="agree" onChange={onChange}>
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>Agree</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="agree" onChange={onChange}>
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>Agree</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       fireEvent.press(screen.getByRole('checkbox'));
       expect(onChange).toHaveBeenCalledTimes(1);
@@ -63,28 +90,24 @@ describe('AppCheckbox', () => {
 
     it('reflects checked state via isChecked', () => {
       render(
-        wrap(
-          <AppCheckbox value="agree" isChecked>
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>Checked</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="agree" isChecked>
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>Checked</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       expect(screen.getByRole('checkbox').props.accessibilityState?.checked).toBe(true);
     });
 
     it('reflects unchecked state', () => {
       render(
-        wrap(
-          <AppCheckbox value="agree" isChecked={false}>
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>Unchecked</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="agree" isChecked={false}>
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>Unchecked</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       expect(screen.getByRole('checkbox').props.accessibilityState?.checked).toBe(false);
     });
@@ -94,14 +117,12 @@ describe('AppCheckbox', () => {
     it('does not fire onChange when isDisabled', () => {
       const onChange = jest.fn();
       render(
-        wrap(
-          <AppCheckbox value="agree" isDisabled onChange={onChange}>
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>Disabled</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="agree" isDisabled onChange={onChange}>
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>Disabled</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       fireEvent.press(screen.getByRole('checkbox'));
       expect(onChange).not.toHaveBeenCalled();
@@ -109,14 +130,12 @@ describe('AppCheckbox', () => {
 
     it('has disabled accessibilityState when isDisabled', () => {
       render(
-        wrap(
-          <AppCheckbox value="agree" isDisabled>
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>Disabled</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="agree" isDisabled>
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>Disabled</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       expect(screen.getByRole('checkbox').props.accessibilityState?.disabled).toBe(true);
     });
@@ -125,46 +144,26 @@ describe('AppCheckbox', () => {
   describe('invalid state', () => {
     it('renders without error when isInvalid', () => {
       render(
-        wrap(
-          <AppCheckbox value="agree" isInvalid>
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>Invalid</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="agree" isInvalid>
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>Invalid</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       expect(screen.getByText('Invalid')).toBeTruthy();
-    });
-  });
-
-  describe('label association', () => {
-    it('renders label text that is accessible', () => {
-      render(
-        wrap(
-          <AppCheckbox value="terms">
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>Terms and conditions</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
-      );
-      expect(screen.getByText('Terms and conditions')).toBeTruthy();
     });
   });
 
   describe('accessibility', () => {
     it('has checkbox role', () => {
       render(
-        wrap(
-          <AppCheckbox value="test">
-            <AppCheckbox.Indicator>
-              <AppCheckbox.Icon as={CheckIcon} />
-            </AppCheckbox.Indicator>
-            <AppCheckbox.Label>Accept</AppCheckbox.Label>
-          </AppCheckbox>,
-        ),
+        <AppCheckbox value="test">
+          <AppCheckbox.Indicator>
+            <AppCheckbox.Icon as={CheckIcon} />
+          </AppCheckbox.Indicator>
+          <AppCheckbox.Label>Accept</AppCheckbox.Label>
+        </AppCheckbox>,
       );
       expect(screen.getByRole('checkbox')).toBeTruthy();
     });

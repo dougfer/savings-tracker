@@ -1,8 +1,6 @@
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
 
-import { Text } from 'react-native';
-
-import { Progress, ProgressFilledTrack } from '@gluestack-ui/themed';
+import { Text, View, type TextProps, type ViewProps } from 'react-native';
 
 type ProgressVariant = 'default' | 'success' | 'warning';
 type ProgressSize = 'xs' | 'sm' | 'md' | 'lg';
@@ -34,7 +32,7 @@ const fillVariantCls: Record<ProgressVariant, string> = {
   warning: 'bg-warning',
 };
 
-type AppProgressBarRootProps = Omit<ComponentProps<typeof Progress>, 'value'> & {
+type AppProgressBarRootProps = ViewProps & {
   value?: number;
   size?: ProgressSize;
   variant?: ProgressVariant;
@@ -51,33 +49,35 @@ function AppProgressBarRoot({
   ...props
 }: AppProgressBarRootProps) {
   const clamped = Math.min(100, Math.max(0, value));
-  const cls = ['w-full bg-muted rounded-full', trackHeightCls[size], className]
+  const cls = ['w-full bg-muted rounded-full overflow-hidden', trackHeightCls[size], className]
     .filter(Boolean)
     .join(' ');
   return (
     <AppProgressBarContext.Provider value={{ value: clamped, variant, size }}>
-      <Progress
+      <View
         {...props}
-        value={clamped}
         className={cls}
+        role="progressbar"
         accessibilityRole="progressbar"
         aria-valuenow={clamped}
         aria-valuemin={0}
         aria-valuemax={100}
       >
         {children}
-      </Progress>
+      </View>
     </AppProgressBarContext.Provider>
   );
 }
 
-function AppProgressBarTrack({ className, ...props }: ComponentProps<typeof ProgressFilledTrack>) {
-  const { variant } = useAppProgressBarCtx();
+type AppProgressBarTrackProps = ViewProps & { className?: string };
+
+function AppProgressBarTrack({ className, style, ...props }: AppProgressBarTrackProps) {
+  const { variant, value } = useAppProgressBarCtx();
   const cls = ['h-full rounded-full', fillVariantCls[variant], className].filter(Boolean).join(' ');
-  return <ProgressFilledTrack {...props} className={cls} />;
+  return <View {...props} className={cls} style={[{ width: `${value}%` }, style]} />;
 }
 
-type AppProgressBarLabelProps = ComponentProps<typeof Text> & { className?: string };
+type AppProgressBarLabelProps = TextProps & { className?: string };
 
 function AppProgressBarLabel({ className, children, ...props }: AppProgressBarLabelProps) {
   const { value } = useAppProgressBarCtx();

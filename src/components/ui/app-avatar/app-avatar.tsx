@@ -1,6 +1,6 @@
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
 
-import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from '@gluestack-ui/themed';
+import { Image, Text, View, type ImageProps, type TextProps, type ViewProps } from 'react-native';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
@@ -32,7 +32,7 @@ const sizeFallbackTextCls: Record<AvatarSize, string> = {
   '2xl': 'text-heading-sm',
 };
 
-type AppAvatarRootProps = Omit<ComponentProps<typeof Avatar>, 'size'> & {
+type AppAvatarRootProps = ViewProps & {
   size?: AvatarSize;
   className?: string;
   children?: ReactNode;
@@ -48,29 +48,40 @@ function AppAvatarRoot({ size = 'md', className, children, ...props }: AppAvatar
     .join(' ');
   return (
     <AppAvatarContext.Provider value={{ size }}>
-      <Avatar {...props} size={size} className={cls}>
+      <View {...props} className={cls} accessibilityRole="image">
         {children}
-      </Avatar>
+      </View>
     </AppAvatarContext.Provider>
   );
 }
 
-function AppAvatarImage({ className, ...props }: ComponentProps<typeof AvatarImage>) {
+type AppAvatarImageProps = ImageProps & { className?: string };
+
+function AppAvatarImage({ className, ...props }: AppAvatarImageProps) {
   const cls = ['w-full h-full rounded-full', className].filter(Boolean).join(' ');
-  return <AvatarImage {...props} className={cls} />;
+  return <Image {...props} className={cls} />;
 }
 
-function AppAvatarFallbackText({ className, ...props }: ComponentProps<typeof AvatarFallbackText>) {
+type AppAvatarFallbackTextProps = TextProps & { className?: string };
+
+function AppAvatarFallbackText({ className, ...props }: AppAvatarFallbackTextProps) {
   const { size } = useAppAvatarCtx();
   const cls = ['text-muted-foreground font-sans-semibold', sizeFallbackTextCls[size], className]
     .filter(Boolean)
     .join(' ');
-  return <AvatarFallbackText {...props} className={cls} />;
+  return <Text {...props} className={cls} />;
 }
 
-function AppAvatarBadge({ className, ...props }: ComponentProps<typeof AvatarBadge>) {
-  const cls = ['bg-success rounded-full', className].filter(Boolean).join(' ');
-  return <AvatarBadge {...props} className={cls} />;
+type AppAvatarBadgeProps = ViewProps & { className?: string };
+
+function AppAvatarBadge({ className, ...props }: AppAvatarBadgeProps) {
+  const cls = [
+    'bg-success rounded-full absolute bottom-0 right-0 w-2.5 h-2.5 border-2 border-background',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
+  return <View {...props} className={cls} />;
 }
 
 AppAvatarRoot.displayName = 'AppAvatar';

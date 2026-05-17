@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { Box } from '@gluestack-ui/themed';
+import { View } from 'react-native';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type AppScreenProps = {
@@ -11,9 +12,7 @@ type AppScreenProps = {
 export function AppScreen({ children }: AppScreenProps) {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={['top', 'left', 'right']}>
-      <Box flex={1} className="bg-background px-4 pt-4">
-        {children}
-      </Box>
+      <View className="flex-1 bg-background px-4 pt-4">{children}</View>
     </SafeAreaView>
   );
 }

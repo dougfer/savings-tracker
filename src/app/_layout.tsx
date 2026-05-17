@@ -1,6 +1,5 @@
 import '../../global.css';
 import 'react-native-reanimated';
-import '@/lib/gluestack/gluestack-css-interop';
 import { useEffect } from 'react';
 
 import { Platform } from 'react-native';
@@ -12,7 +11,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { appFontsMap } from '@/lib/fonts/app-fonts';
-import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
 
 void SplashScreen.preventAutoHideAsync();
 
@@ -34,9 +32,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <GluestackAppProvider>
-        <Stack screenOptions={{ title: 'Savings Tracker' }} />
-      </GluestackAppProvider>
+      <Stack screenOptions={{ title: 'Savings Tracker' }} />
     </SafeAreaProvider>
   );
 }

@@ -29,8 +29,9 @@ Use this rule as the source of truth for technical decisions and compatibility. 
 
 ## UI, Design System, and Styling
 
-- Component library: `@gluestack-ui/themed@^1.1.73` (v1 final — no further releases), `@gluestack-ui/config@^1.1.20` (v1 final). These packages provide structural primitives (a11y, focus management, compound components); component-level themes are **stripped** in `src/lib/gluestack/gluestack-ui.config.ts` so NativeWind remains the sole styling layer.
+- Component library: `@gluestack-ui/core@^3.0.20` + `@gluestack-ui/utils@^3.0.21` (v3). Use **creator functions** (`createInput`, `createButton`, `createCheckbox`, `createModal`, `createMenu`) from `@gluestack-ui/core/<component>/creator` to build headless UI primitives with automatic state management via `states` + `dataSet` props. Simple components (AppText, AppAvatar, AppProgressBar, AppScreen) use pure React Native primitives. No global provider or config needed — each component registers `cssInterop` locally.
 - Styling bridge: `nativewind@^4.2.4` with `tailwindcss@^3.4.19` (dev, v3-LTS line). **Do NOT upgrade to Tailwind v4** — NativeWind v4 is only compatible with Tailwind v3. NativeWind v5 (preview) would support Tailwind v4 but is not stable.
+- State-driven styling: use `data-[focus=true]:`, `data-[disabled=true]:`, `data-[invalid=true]:`, `data-[active=true]:`, `data-[checked=true]:` in NativeWind `className`. On native, these are resolved by the `withStates` HOC (`src/lib/gluestack/with-states-interop.tsx`); on web, CSS attribute selectors match the `dataSet` attributes set by the creators.
 - SVG / motion: `react-native-svg@15.12.1`, `@legendapp/motion@^2.4.0`
 
 ## Forms, Validation, and State
@@ -60,7 +61,7 @@ Use this rule as the source of truth for technical decisions and compatibility. 
 3. In **TypeScript 5.9**, lean on strict typing and **Expo Router typed routes** for navigation params where generated types exist.
 4. **NativeWind 4 + Tailwind 3**: share tokens and utility patterns via the project Tailwind/Gluestack setup; avoid duplicating ad-hoc style objects when utilities already exist. **Never install Tailwind v4** (it requires NativeWind v5 which is still preview).
 5. **Reanimated**: keep `react-native-reanimated/plugin` **last** in `babel.config.js` plugins; verify worklets/Reanimated APIs against the installed minor.
-6. **Gluestack v1 + NativeWind**: `@gluestack-ui/themed` is at its final release (1.1.73). Use its structural primitives (Button, Input, Modal, etc.) for a11y and cross-platform behaviour, but style **exclusively via NativeWind `className`** — component themes are stripped in the project config. Respect baseline a11y contracts under `specs/001-project-foundation/contracts/` when building UI.
+6. **Gluestack v3 + NativeWind**: use `@gluestack-ui/core` creators for interactive components (Input, Button, Checkbox, Modal, Menu) — they manage focus, hover, disabled, and checked states automatically via `states`/`dataSet` props. Wrap the Root primitive with `withStates()` from `src/lib/gluestack/with-states-interop.tsx` so `data-[xxx=true]:` classes resolve on native. Style **exclusively via NativeWind `className`**. Simple display components (Text, Avatar, ProgressBar, Screen) use pure RN primitives without creators. Respect baseline a11y contracts under `specs/001-project-foundation/contracts/`.
 7. **Jest + jest-expo + RNTL**: test behavior users see (labels, roles, navigation outcomes), not implementation details; keep `babel.config.js` test path consistent (e.g. NativeWind preset disabled under test if that is the project convention).
 8. When adding dependencies, pick the latest **stable** release compatible with **Expo SDK 54** and **RN 0.81**; run `npx expo install <pkg>` for Expo-first packages.
 9. Before opening a PR, run `npm run lint` and `npm run test`.
