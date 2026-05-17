@@ -1,5 +1,6 @@
-import { Box } from '@gluestack-ui/themed';
 import type { ReactNode } from 'react';
+
+import { Box } from '@gluestack-ui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type AppScreenProps = {

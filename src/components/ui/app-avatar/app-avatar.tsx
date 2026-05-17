@@ -1,5 +1,6 @@
-import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from '@gluestack-ui/themed';
 import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+
+import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from '@gluestack-ui/themed';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 

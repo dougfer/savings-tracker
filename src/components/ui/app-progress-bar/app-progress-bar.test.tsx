@@ -1,6 +1,9 @@
 import React from 'react';
+
 import { render, screen } from '@testing-library/react-native';
+
 import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
+
 import { AppProgressBar } from './app-progress-bar';
 
 function wrap(node: React.ReactElement) {

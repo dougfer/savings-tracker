@@ -1,6 +1,8 @@
-import { Progress, ProgressFilledTrack } from '@gluestack-ui/themed';
 import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+
 import { Text } from 'react-native';
+
+import { Progress, ProgressFilledTrack } from '@gluestack-ui/themed';
 
 type ProgressVariant = 'default' | 'success' | 'warning';
 type ProgressSize = 'xs' | 'sm' | 'md' | 'lg';

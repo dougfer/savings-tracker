@@ -2,13 +2,17 @@ import '../../global.css';
 import 'react-native-reanimated';
 import '@/lib/gluestack/gluestack-css-interop';
 import { useEffect } from 'react';
+
 import { Platform } from 'react-native';
-import { Stack } from 'expo-router';
+
 import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
+
 import { appFontsMap } from '@/lib/fonts/app-fonts';
+import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
 
 void SplashScreen.preventAutoHideAsync();
 

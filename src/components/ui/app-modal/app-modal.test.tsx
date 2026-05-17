@@ -1,7 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
+
 import { Text } from 'react-native';
+
+import { render, screen, fireEvent } from '@testing-library/react-native';
+
 import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
+
 import { AppModal, AppModalContext } from './app-modal';
 
 // Gluestack modal primitives have internal visibility/animation state that prevents

@@ -1,11 +1,13 @@
-import { Menu, MenuItem, MenuItemLabel } from '@gluestack-ui/themed';
 import React, {
   createContext,
   type ComponentProps,
   type ReactElement,
   type ReactNode,
 } from 'react';
+
 import { View } from 'react-native';
+
+import { Menu, MenuItem, MenuItemLabel } from '@gluestack-ui/themed';
 
 const AppDropdownMenuContext = createContext<Record<string, never> | null>(null);
 
@@ -38,7 +40,7 @@ function AppDropdownMenuRoot({ children, className, ...props }: AppDropdownMenuR
       <Menu
         {...props}
         trigger={triggerFn ?? (() => <View />)}
-        className={['bg-card border border-border rounded-xl shadow-md py-1', className]
+        className={['rounded-xl border border-border bg-card py-1 shadow-md', className]
           .filter(Boolean)
           .join(' ')}
       >
@@ -72,11 +74,7 @@ function AppDropdownMenuContent({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
-function AppDropdownMenuItem({
-  className,
-  children,
-  ...props
-}: ComponentProps<typeof MenuItem>) {
+function AppDropdownMenuItem({ className, children, ...props }: ComponentProps<typeof MenuItem>) {
   const cls = ['flex-row items-center gap-2 px-3 py-2.5', className].filter(Boolean).join(' ');
   return (
     <MenuItem {...props} className={cls}>
@@ -85,10 +83,7 @@ function AppDropdownMenuItem({
   );
 }
 
-function AppDropdownMenuItemLabel({
-  className,
-  ...props
-}: ComponentProps<typeof MenuItemLabel>) {
+function AppDropdownMenuItemLabel({ className, ...props }: ComponentProps<typeof MenuItemLabel>) {
   const cls = ['text-body text-foreground', className].filter(Boolean).join(' ');
   return <MenuItemLabel {...props} className={cls} />;
 }
@@ -100,14 +95,16 @@ type AppDropdownMenuItemIconProps = {
 
 function AppDropdownMenuItemIcon({ as: AsIcon, className }: AppDropdownMenuItemIconProps) {
   if (!AsIcon) return null;
-  return <AsIcon size={16} className={['text-muted-foreground', className].filter(Boolean).join(' ')} />;
+  return (
+    <AsIcon size={16} className={['text-muted-foreground', className].filter(Boolean).join(' ')} />
+  );
 }
 
 function AppDropdownMenuSeparator({ className, ...props }: ComponentProps<typeof View>) {
   return (
     <View
       {...props}
-      className={['border-b border-border my-1 mx-1', className].filter(Boolean).join(' ')}
+      className={['mx-1 my-1 border-b border-border', className].filter(Boolean).join(' ')}
       accessibilityRole="separator"
     />
   );

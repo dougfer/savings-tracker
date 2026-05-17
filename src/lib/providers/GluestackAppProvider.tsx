@@ -1,5 +1,6 @@
-import { GluestackUIProvider } from '@gluestack-ui/themed';
 import type { ReactNode } from 'react';
+
+import { GluestackUIProvider } from '@gluestack-ui/themed';
 
 import { appGluestackConfig } from '@/lib/gluestack/gluestack-ui.config';
 

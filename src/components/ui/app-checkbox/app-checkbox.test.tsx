@@ -1,6 +1,9 @@
 import React from 'react';
+
 import { render, screen, fireEvent } from '@testing-library/react-native';
+
 import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
+
 import { AppCheckbox } from './app-checkbox';
 
 // Minimal stand-in for CheckIcon in tests

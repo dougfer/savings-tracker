@@ -1,3 +1,5 @@
+import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+
 import {
   Modal,
   ModalBackdrop,
@@ -7,7 +9,6 @@ import {
   ModalFooter,
   ModalHeader,
 } from '@gluestack-ui/themed';
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
 
 type ModalSize = 'sm' | 'md' | 'lg' | 'full';
 
@@ -39,9 +40,7 @@ function AppModalRoot({ size = 'md', className, children, ...props }: AppModalRo
   return (
     <Modal {...props} className={className}>
       {/* Provider is inside Modal so context is accessible through Gluestack's portal */}
-      <AppModalContext.Provider value={{ size }}>
-        {children}
-      </AppModalContext.Provider>
+      <AppModalContext.Provider value={{ size }}>{children}</AppModalContext.Provider>
     </Modal>
   );
 }
@@ -53,11 +52,7 @@ function AppModalBackdrop({ className, ...props }: ComponentProps<typeof ModalBa
 
 function AppModalContent({ className, ...props }: ComponentProps<typeof ModalContent>) {
   const { size } = useAppModalCtx();
-  const cls = [
-    'bg-card border border-border rounded-2xl mx-4',
-    sizeContentCls[size],
-    className,
-  ]
+  const cls = ['bg-card border border-border rounded-2xl mx-4', sizeContentCls[size], className]
     .filter(Boolean)
     .join(' ');
   return <ModalContent {...props} className={cls} />;

@@ -1,4 +1,3 @@
-import { cssInterop } from 'react-native-css-interop';
 import {
   Avatar,
   AvatarBadge,
@@ -39,6 +38,7 @@ import {
   ProgressFilledTrack,
   Text,
 } from '@gluestack-ui/themed';
+import { cssInterop } from 'react-native-css-interop';
 
 const mapping = { className: 'style' } as const;
 

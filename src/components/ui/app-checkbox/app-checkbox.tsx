@@ -1,5 +1,6 @@
-import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from '@gluestack-ui/themed';
 import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+
+import { Checkbox, CheckboxIcon, CheckboxIndicator, CheckboxLabel } from '@gluestack-ui/themed';
 
 type CheckboxSize = 'sm' | 'md' | 'lg';
 

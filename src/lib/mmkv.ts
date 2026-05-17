@@ -1,4 +1,5 @@
 import { Platform } from 'react-native';
+
 import { MMKV } from 'react-native-mmkv';
 
 type KeyValueStore = {
@@ -28,7 +29,8 @@ let storage: KeyValueStore | null = null;
 /** Non-sensitive infra keys only. Web uses an in-memory fallback so `expo start --web` works without native MMKV. */
 export function getMmkvStorage(): KeyValueStore {
   if (!storage) {
-    storage = Platform.OS === 'web' ? new WebMemoryStore() : new MMKV({ id: 'savings-tracker-infra' });
+    storage =
+      Platform.OS === 'web' ? new WebMemoryStore() : new MMKV({ id: 'savings-tracker-infra' });
   }
   return storage;
 }

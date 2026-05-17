@@ -1,7 +1,10 @@
 import React from 'react';
+
 import { render, screen } from '@testing-library/react-native';
-import { AppText } from './app-text';
+
 import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
+
+import { AppText } from './app-text';
 
 function wrap(node: React.ReactElement) {
   return <GluestackAppProvider>{node}</GluestackAppProvider>;

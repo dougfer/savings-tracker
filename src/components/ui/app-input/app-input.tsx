@@ -1,3 +1,5 @@
+import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+
 import {
   FormControl,
   FormControlError,
@@ -12,7 +14,6 @@ import {
   InputIcon,
   InputSlot,
 } from '@gluestack-ui/themed';
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
 
 type InputVariant = 'outline' | 'underlined' | 'rounded';
 type InputSize = 'sm' | 'md' | 'lg';
@@ -74,7 +75,9 @@ function AppInputRoot({
   children,
 }: AppInputRootProps) {
   return (
-    <AppInputContext.Provider value={{ variant, size, isInvalid, isDisabled, isRequired, isReadOnly }}>
+    <AppInputContext.Provider
+      value={{ variant, size, isInvalid, isDisabled, isRequired, isReadOnly }}
+    >
       <FormControl
         isDisabled={isDisabled}
         isInvalid={isInvalid}

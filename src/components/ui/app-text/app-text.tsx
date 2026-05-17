@@ -1,5 +1,6 @@
-import { Text } from '@gluestack-ui/themed';
 import type { ComponentProps } from 'react';
+
+import { Text } from '@gluestack-ui/themed';
 
 type AppTextProps = ComponentProps<typeof Text>;
 

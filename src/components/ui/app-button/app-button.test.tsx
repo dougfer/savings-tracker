@@ -1,6 +1,9 @@
 import React from 'react';
+
 import { render, screen, fireEvent } from '@testing-library/react-native';
+
 import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
+
 import { AppButton } from './app-button';
 
 function wrap(node: React.ReactElement) {
@@ -10,12 +13,24 @@ function wrap(node: React.ReactElement) {
 describe('AppButton', () => {
   describe('rendering', () => {
     it('renders Text subpart', () => {
-      render(wrap(<AppButton><AppButton.Text>Save</AppButton.Text></AppButton>));
+      render(
+        wrap(
+          <AppButton>
+            <AppButton.Text>Save</AppButton.Text>
+          </AppButton>,
+        ),
+      );
       expect(screen.getByText('Save')).toBeTruthy();
     });
 
     it('renders with primary variant by default', () => {
-      render(wrap(<AppButton testID="btn"><AppButton.Text>OK</AppButton.Text></AppButton>));
+      render(
+        wrap(
+          <AppButton testID="btn">
+            <AppButton.Text>OK</AppButton.Text>
+          </AppButton>,
+        ),
+      );
       expect(screen.getByTestId('btn')).toBeTruthy();
     });
 
@@ -127,7 +142,13 @@ describe('AppButton', () => {
 
   describe('accessibility', () => {
     it('has button role', () => {
-      render(wrap(<AppButton><AppButton.Text>Action</AppButton.Text></AppButton>));
+      render(
+        wrap(
+          <AppButton>
+            <AppButton.Text>Action</AppButton.Text>
+          </AppButton>,
+        ),
+      );
       expect(screen.getByRole('button')).toBeTruthy();
     });
   });

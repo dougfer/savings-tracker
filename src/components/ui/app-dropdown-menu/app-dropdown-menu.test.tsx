@@ -1,7 +1,11 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
+
 import { Pressable, Text, View } from 'react-native';
+
+import { render, screen, fireEvent } from '@testing-library/react-native';
+
 import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
+
 import { AppDropdownMenu } from './app-dropdown-menu';
 
 const EditIcon = () => null;
