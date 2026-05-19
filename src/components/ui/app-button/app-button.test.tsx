@@ -41,6 +41,11 @@ jest.mock('@gluestack-ui/core/button/creator', () => {
 
 describe('AppButton', () => {
   describe('rendering', () => {
+    it('renders string children as label text', () => {
+      render(<AppButton>Save</AppButton>);
+      expect(screen.getByText('Save')).toBeTruthy();
+    });
+
     it('renders Text subpart', () => {
       render(
         <AppButton>
@@ -52,33 +57,22 @@ describe('AppButton', () => {
 
     it('renders with primary variant by default', () => {
       render(
-        <AppButton testID="btn">
-          <AppButton.Text>OK</AppButton.Text>
-        </AppButton>,
+        <AppButton testID="btn">OK</AppButton>,
       );
       expect(screen.getByTestId('btn')).toBeTruthy();
     });
 
-    it.each(['primary', 'secondary', 'outline', 'destructive'] as const)(
+    it.each(['primary', 'secondary', 'tertiary'] as const)(
       'renders %s variant',
       (variant) => {
         render(
           <AppButton variant={variant} testID={`btn-${variant}`}>
-            <AppButton.Text>{variant}</AppButton.Text>
+            {variant}
           </AppButton>,
         );
         expect(screen.getByTestId(`btn-${variant}`)).toBeTruthy();
       },
     );
-
-    it.each(['sm', 'md', 'lg'] as const)('renders %s size', (size) => {
-      render(
-        <AppButton size={size} testID={`btn-${size}`}>
-          <AppButton.Text>{size}</AppButton.Text>
-        </AppButton>,
-      );
-      expect(screen.getByTestId(`btn-${size}`)).toBeTruthy();
-    });
   });
 
   describe('disabled state', () => {
@@ -86,7 +80,7 @@ describe('AppButton', () => {
       const onPress = jest.fn();
       render(
         <AppButton isDisabled onPress={onPress} testID="btn">
-          <AppButton.Text>Disabled</AppButton.Text>
+          Disabled
         </AppButton>,
       );
       fireEvent.press(screen.getByTestId('btn'));
@@ -99,7 +93,7 @@ describe('AppButton', () => {
       render(
         <AppButton isLoading testID="btn">
           <AppButton.Spinner />
-          <AppButton.Text>Loading</AppButton.Text>
+          Loading
         </AppButton>,
       );
       expect(screen.getByTestId('btn')).toBeTruthy();
@@ -109,7 +103,7 @@ describe('AppButton', () => {
       render(
         <AppButton testID="btn">
           <AppButton.Spinner />
-          <AppButton.Text>Ready</AppButton.Text>
+          Ready
         </AppButton>,
       );
       expect(screen.getByText('Ready')).toBeTruthy();
@@ -119,7 +113,7 @@ describe('AppButton', () => {
       const onPress = jest.fn();
       render(
         <AppButton isLoading onPress={onPress} testID="btn">
-          <AppButton.Text>Loading</AppButton.Text>
+          Loading
         </AppButton>,
       );
       fireEvent.press(screen.getByTestId('btn'));
@@ -132,7 +126,7 @@ describe('AppButton', () => {
       const onPress = jest.fn();
       render(
         <AppButton onPress={onPress} testID="btn">
-          <AppButton.Text>Press me</AppButton.Text>
+          Press me
         </AppButton>,
       );
       fireEvent.press(screen.getByTestId('btn'));
@@ -143,9 +137,7 @@ describe('AppButton', () => {
   describe('accessibility', () => {
     it('has button role', () => {
       render(
-        <AppButton>
-          <AppButton.Text>Action</AppButton.Text>
-        </AppButton>,
+        <AppButton>Action</AppButton>,
       );
       expect(screen.getByRole('button')).toBeTruthy();
     });

@@ -28,19 +28,21 @@ import {
 
 ### Button
 
+Variants follow Pencil (`primary`, `secondary`, `tertiary`). Pass the label as `children` (string) or compose icons + text:
+
 ```tsx
-<AppButton variant="primary" size="md" onPress={handleSave}>
-  <AppButton.Text>Save Goal</AppButton.Text>
+<AppButton variant="primary" onPress={handleSave}>
+  Save Goal
 </AppButton>
 
-<AppButton variant="outline" size="sm" isDisabled>
-  <AppButton.Icon as={EditIcon} />
-  <AppButton.Text>Edit</AppButton.Text>
+<AppButton variant="tertiary" isDisabled>
+  <EditIcon width={20} height={20} color="#FFFFFF" />
+  Edit
 </AppButton>
 
-<AppButton variant="destructive" isLoading>
+<AppButton variant="secondary" isLoading>
   <AppButton.Spinner />
-  <AppButton.Text>Deleting...</AppButton.Text>
+  Deleting…
 </AppButton>
 ```
 
@@ -105,8 +107,8 @@ Note: Place `FallbackText` before `Image` in JSX for iOS compatibility.
 <AppDropdownMenu>
   <AppDropdownMenu.Trigger>
     {(triggerProps) => (
-      <AppButton variant="outline" size="sm" {...triggerProps}>
-        <AppButton.Icon as={MoreHorizontalIcon} />
+      <AppButton variant="tertiary" {...triggerProps}>
+        <MoreHorizontalIcon width={20} height={20} color="#FFFFFF" />
       </AppButton>
     )}
   </AppDropdownMenu.Trigger>
@@ -129,8 +131,8 @@ Note: Place `FallbackText` before `Image` in JSX for iOS compatibility.
 ```tsx
 const [showModal, setShowModal] = useState(false);
 
-<AppButton variant="destructive" onPress={() => setShowModal(true)}>
-  <AppButton.Text>Delete Goal</AppButton.Text>
+<AppButton variant="secondary" onPress={() => setShowModal(true)}>
+  Delete Goal
 </AppButton>
 
 <AppModal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
@@ -146,11 +148,11 @@ const [showModal, setShowModal] = useState(false);
       <Text>Are you sure you want to delete this goal? This action cannot be undone.</Text>
     </AppModal.Body>
     <AppModal.Footer>
-      <AppButton variant="outline" onPress={() => setShowModal(false)}>
-        <AppButton.Text>Cancel</AppButton.Text>
+      <AppButton variant="tertiary" onPress={() => setShowModal(false)}>
+        Cancel
       </AppButton>
-      <AppButton variant="destructive" onPress={handleDelete}>
-        <AppButton.Text>Delete</AppButton.Text>
+      <AppButton variant="primary" onPress={handleDelete}>
+        Delete
       </AppButton>
     </AppModal.Footer>
   </AppModal.Content>
@@ -163,7 +165,7 @@ All components accept an optional `className` prop to add NativeWind utilities:
 
 ```tsx
 <AppButton variant="primary" className="mt-4 w-full">
-  <AppButton.Text>Full-Width Button</AppButton.Text>
+  Full-Width Button
 </AppButton>
 ```
 

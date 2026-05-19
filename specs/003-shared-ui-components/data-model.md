@@ -6,45 +6,54 @@ All visual values (colors, spacing, radius, typography) reference tokens from `t
 
 ## 1. AppButton
 
+**Design source**: Pencil `app.pen` node `UpBXR` (Button — Primary / Secondary / Tertiary hierarchies).
+
 ### Props (Root)
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'destructive'` | `'primary'` | Visual style variant |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size preset |
-| `isDisabled` | `boolean` | `false` | Disables interaction and mutes visuals |
+| `variant` | `'primary' \| 'secondary' \| 'tertiary'` | `'primary'` | Visual hierarchy from Pencil |
+| `isDisabled` | `boolean` | `false` | Disables interaction; secondary/tertiary mute label to `neutral-400` |
 | `isLoading` | `boolean` | `false` | Shows spinner, disables interaction |
 | `onPress` | `() => void` | — | Press handler |
 | `className` | `string?` | — | Additional NativeWind classes |
-| `children` | `ReactNode` | — | Compound subparts |
+| `children` | `ReactNode` | — | Label string/number and/or compound subparts (icons as `children`, not a dedicated slot) |
 
-### Compound Subparts
+### Children
 
-| Subpart | Base Primitive | Purpose |
-|---------|----------------|---------|
-| `AppButton.Text` | Gluestack `ButtonText` | Button label text |
-| `AppButton.Icon` | Gluestack `ButtonIcon` | Leading or trailing icon |
-| `AppButton.Spinner` | Gluestack `ButtonSpinner` | Loading indicator |
+- **String or number** — wrapped automatically in styled label text (preferred: `<AppButton>Save</AppButton>`).
+- **Custom layout** — pass icons/elements as `children`; bare text nodes in the tree are auto-wrapped.
+- **`AppButton.Text`** — optional explicit label (same styles as auto-wrapped text).
+- **`AppButton.Spinner`** — loading indicator when `isLoading` is true.
+
+### Layout (single size from Pencil)
+
+| Property | Value |
+|----------|--------|
+| Min height | `48px` (`min-h-[48px]`) |
+| Padding | `py-3` (12px); `px-5` primary/secondary, `px-4` tertiary |
+| Gap | `gap-2.5` (10px) |
+| Radius | `rounded-full` |
+| Typography | `font-sans-medium text-body` (16px / 500) |
 
 ### States
 
 | State | Visual | Behavioral |
 |-------|--------|------------|
 | Default | Variant-specific bg/text/border | Interactive |
-| Hover (web) | Slightly darker bg | Interactive |
-| Pressed | Darker bg | Interactive |
-| Focused | Ring indicator | Interactive |
-| Disabled | Muted opacity | Non-interactive, announced |
-| Loading | Spinner visible, text optional | Non-interactive, busy announced |
+| Hover (web) | Hierarchy-specific bg (e.g. primary → `bg-primary`) | Interactive |
+| Pressed | `data-[active=true]:opacity-80` | Interactive |
+| Focus visible | Orange + dark outer shadow (`#FF5722` / `#101010`) | Interactive |
+| Disabled | Secondary/tertiary: `text-neutral-400` | Non-interactive |
+| Loading | Spinner visible | Non-interactive |
 
-### Token Mapping (to be finalized after Figma extraction)
+### Token mapping (Pencil → NativeWind)
 
-| Variant | Background | Text | Border |
-|---------|------------|------|--------|
-| primary | `bg-primary` | `text-primary-foreground` | — |
-| secondary | `bg-secondary` | `text-secondary-foreground` | — |
-| outline | `bg-transparent` | `text-foreground` | `border border-border` |
-| destructive | `bg-destructive` | `text-destructive-foreground` | — |
+| Variant | Background | Text | Border / notes |
+|---------|------------|------|----------------|
+| primary | `bg-orange-400`, hover `bg-primary` | `text-neutral-900` | — |
+| secondary | `bg-neutral-800`, hover `bg-neutral-700` | `text-neutral-0`, disabled `text-neutral-400` | `border-secondary` |
+| tertiary | transparent, hover `bg-neutral-800`, focus `bg-neutral-900` | `text-neutral-0`, disabled `text-neutral-400` | — |
 
 ---
 

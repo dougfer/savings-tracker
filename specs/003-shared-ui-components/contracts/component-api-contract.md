@@ -19,9 +19,9 @@
 ```tsx
 import { AppButton } from '@/components/ui';
 
-<AppButton variant="primary" size="md" onPress={handleSave}>
-  <AppButton.Icon as={SaveIcon} />
-  <AppButton.Text>Save Goal</AppButton.Text>
+<AppButton variant="primary" onPress={handleSave}>
+  <SaveIcon width={20} height={20} />
+  Save Goal
 </AppButton>
 ```
 
@@ -29,7 +29,7 @@ import { AppButton } from '@/components/ui';
 
 | Component | File/Folder | Compound | Subparts |
 |-----------|-------------|----------|----------|
-| `AppButton` | `app-button/` | Yes | `.Text`, `.Icon`, `.Spinner` |
+| `AppButton` | `app-button/` | Yes | Label via `children` (string) or `.Text`; `.Spinner` for loading |
 | `AppInput` | `app-input/` | Yes | `.Field`, `.Slot`, `.Icon`, `.Label`, `.HelperText`, `.ErrorText`, `.ErrorIcon` |
 | `AppCheckbox` | `app-checkbox/` | Yes | `.Indicator`, `.Icon`, `.Label` |
 | `AppAvatar` | `app-avatar.tsx` | Yes | `.Image`, `.FallbackText`, `.Badge` |

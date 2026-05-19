@@ -10,9 +10,7 @@ export default function OverviewPlaceholderScreen() {
         Savings Tracker — foundation
       </AppText>
       <AppText>Structural shell only. Pick an area to open its placeholder route.</AppText>
-      <AppButton variant="primary">
-        <AppButton.Text>Open Overview</AppButton.Text>
-      </AppButton>
+      <AppButton variant="secondary">Open Overview</AppButton>
       <AppInput>
         <AppInput.Label>Label</AppInput.Label>
         <AppInput.Group>

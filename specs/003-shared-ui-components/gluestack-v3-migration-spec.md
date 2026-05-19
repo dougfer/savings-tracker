@@ -227,29 +227,28 @@ import { View } from 'react-native';
 ### 5.2 AppButton (Prioridade 1)
 
 **Creator:** `createButton`
-**Primitivos RN:** `Pressable` (Root), `Text` (Text), SVG (Icon), `ActivityIndicator` (Spinner)
+**Design:** Pencil `app.pen` node `UpBXR` — variantes `primary` | `secondary` | `tertiary` apenas (sem `outline` / `destructive` / `size`).
+**Primitivos RN:** `Pressable` (Root), `Text` (Text), `ActivityIndicator` (Spinner)
 
-**Data attributes disponíveis no Root:**
-- `data-active="true"` — quando pressionado
-- `data-hover="true"` — quando hover (web)
-- `data-focus-visible="true"` — foco via teclado
-- `data-disabled="true"` — quando `isDisabled={true}`
+**Data attributes no Root:**
+- `data-active="true"` — pressionado
+- `data-hover="true"` — hover (web)
+- `data-focus-visible="true"` — foco teclado (sombra laranja + escura do Pencil)
+- `data-disabled="true"` — `isDisabled` ou `isLoading`
 
-**Estilos existentes (manter):**
+**Variantes (Pencil → NativeWind):**
 
-| Variant | Background | Text |
-|---------|------------|------|
-| primary | `bg-primary` | `text-primary-foreground` |
-| secondary | `bg-secondary` | `text-secondary-foreground` |
-| outline | `bg-transparent border border-border` | `text-foreground` |
-| destructive | `bg-destructive` | `text-destructive-foreground` |
+| Variant | Root | Text |
+|---------|------|------|
+| primary | `bg-orange-400`, `data-[hover=true]:bg-primary` | `text-neutral-900` |
+| secondary | `bg-neutral-800 border-secondary`, `data-[hover=true]:bg-neutral-700` | `text-neutral-0`, `data-[disabled=true]:text-neutral-400` |
+| tertiary | `bg-transparent`, `data-[hover=true]:bg-neutral-800`, focus `bg-neutral-900` | `text-neutral-0`, `data-[disabled=true]:text-neutral-400` |
 
-**Mudança principal:** Trocar `isDisabled ? 'opacity-40' : 'data-[active=true]:opacity-80'` para usar data attributes:
-```
-data-[disabled=true]:opacity-40 data-[active=true]:opacity-80
-```
+**Layout fixo:** `min-h-[48px] py-3`, `px-5` (primary/secondary), `px-4` (tertiary), `rounded-full`, `gap-2.5`, `text-body`.
 
-**Context:** `useStyleContext(SCOPE)` para filhos (Text, Icon) lerem `variant`/`size` do parent — substitui o useContext manual.
+**API:** label como `children` string (auto-wrap em `ButtonText`); ícones como `children`; `AppButton.Text` / `AppButton.Spinner` opcionais.
+
+**Context:** `withStyleContext` + `useStyleContext('APP_BUTTON')` para `variant` nos subparts; variantes via `tva` (`appButtonRootVariants`, `appButtonTextVariants`).
 
 ---
 

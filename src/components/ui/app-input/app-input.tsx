@@ -1,3 +1,18 @@
+/**
+ * AppInput — compound field (Pencil / design tokens). Pass `isInvalid`, `isDisabled`, etc. on `AppInput.Group`.
+ *
+ * @example
+ * <AppInput>
+ *   <AppInput.Label>Amount</AppInput.Label>
+ *   <AppInput.Group isInvalid={hasError}>
+ *     <AppInput.Slot name="currency-dollar" />
+ *     <AppInput.Field placeholder="0.00" />
+ *   </AppInput.Group>
+ *   <AppInput.HelperText variant={hasError ? 'error' : 'default'}>Hint</AppInput.HelperText>
+ * </AppInput>
+ *
+ * @see specs/003-shared-ui-components/quickstart.md — Input
+ */
 import { type FC, type ReactNode, forwardRef } from 'react';
 
 import { Pressable, Text, TextInput, View, type TextInputProps, type TextProps, type ViewProps } from 'react-native';
