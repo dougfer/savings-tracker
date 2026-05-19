@@ -52,6 +52,7 @@ cssInterop(UIButton.Spinner, { className: 'style' } as any);
 // Variants — Pencil node UpBXR (Primary / Secondary / Tertiary only)
 // ---------------------------------------------------------------------------
 
+
 export const appButtonRootVariants = tva({
   base: [
     'flex-row shrink-0 items-center justify-center rounded-full border border-transparent',
@@ -221,5 +222,6 @@ AppButtonText.displayName = 'AppButton.Text';
 AppButtonSpinner.displayName = 'AppButton.Spinner';
 
 export const AppButton = Object.assign(AppButtonRoot, {
+  Text: AppButtonText,
   Spinner: AppButtonSpinner,
 });

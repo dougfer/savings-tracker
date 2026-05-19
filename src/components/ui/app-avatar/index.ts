@@ -1,1 +1,5 @@
-export { AppAvatar } from './app-avatar';
+export {
+  AppAvatar,
+  appAvatarRootVariants,
+  appAvatarFallbackTextClassName,
+} from './app-avatar';

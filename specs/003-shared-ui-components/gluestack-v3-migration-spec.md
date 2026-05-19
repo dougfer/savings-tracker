@@ -160,11 +160,9 @@ export function AppScreen({ children }) {
 
 #### AppAvatar
 ```tsx
-// ANTES: import { Avatar, AvatarImage, ... } from '@gluestack-ui/themed';
-// DEPOIS:
-import { View, Text, Image } from 'react-native';
-// Compound component sem Gluestack — puro RN + NativeWind
-// Context apenas para propagar `size` (se necessário), já que não há estado interativo
+// Pencil M8Qbp — Pressable + withStates + tva; 48×48; Default/Hover/Focus
+// Subparts: AppAvatar.Image, AppAvatar.FallbackText (sem Badge, sem size presets)
+// Context: imageVisible para alternar fallback ↔ foto
 ```
 
 #### AppProgressBar

@@ -136,27 +136,45 @@ All visual values (colors, spacing, radius, typography) reference tokens from `t
 
 ## 4. AppAvatar
 
+**Design source**: Pencil `app.pen` node `M8Qbp` (48×48, Default / Hover / Focus).
+
 ### Props (Root)
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'md'` | Size preset |
 | `className` | `string?` | — | Additional NativeWind classes |
-| `children` | `ReactNode` | — | Compound subparts |
+| `children` | `ReactNode` | — | `FallbackText` + optional `Image` |
+| `accessibilityLabel` | `string?` | — | Spoken label for the avatar |
+| `onPress` | `PressableProps['onPress']` | — | Optional; enables focus/hover when used as trigger |
+| `disabled` | `boolean` | `false` | Disables interaction |
 
 ### Compound Subparts
 
 | Subpart | Base Primitive | Purpose |
 |---------|----------------|---------|
-| `AppAvatar.Image` | Gluestack `AvatarImage` | User profile image |
-| `AppAvatar.FallbackText` | Gluestack `AvatarFallbackText` | Initials when no image |
-| `AppAvatar.Badge` | Gluestack `AvatarBadge` | Status indicator |
+| `AppAvatar.Image` | `Image` | Profile photo; hides fallback on successful load |
+| `AppAvatar.FallbackText` | `Text` | Initials when no image or load error |
+
+### Layout (single size from Pencil)
+
+| Property | Value |
+|----------|--------|
+| Size | 48×48 (`h-12 w-12`) |
+| Shape | `rounded-full` |
+| Fallback typography | `font-sans-medium text-body text-neutral-300` |
+
+### States
+
+| State | Visual |
+|-------|--------|
+| Default | `bg-neutral-700`, `border-neutral-500` |
+| Hover (web) | `bg-neutral-600`, `border-neutral-400` |
+| Focus visible | Orange + dark outer shadow (same as Button) |
 
 ### Behavior
 
-- When `AppAvatar.Image` source fails to load → falls back to `AppAvatar.FallbackText`
-- `AppAvatar.FallbackText` receives full name; Gluestack extracts initials automatically
-- Place `FallbackText` before `Image` in JSX for iOS compatibility (Gluestack recommendation)
+- Place `FallbackText` before `Image` in JSX (fallback renders under the photo).
+- `AppAvatar.Image` `onError` → shows `FallbackText` again.
 
 ---
 

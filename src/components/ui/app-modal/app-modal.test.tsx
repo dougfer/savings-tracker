@@ -39,12 +39,12 @@ jest.mock('@gluestack-ui/core/modal/creator', () => {
     );
 
   FakeModal.displayName = 'Modal';
-  FakeModal.Content.displayName = 'Modal.Content';
-  FakeModal.Backdrop.displayName = 'Modal.Backdrop';
-  FakeModal.Header.displayName = 'Modal.Header';
-  FakeModal.Body.displayName = 'Modal.Body';
-  FakeModal.Footer.displayName = 'Modal.Footer';
-  FakeModal.CloseButton.displayName = 'Modal.CloseButton';
+  (FakeModal.Content as { displayName?: string }).displayName = 'Modal.Content';
+  (FakeModal.Backdrop as { displayName?: string }).displayName = 'Modal.Backdrop';
+  (FakeModal.Header as { displayName?: string }).displayName = 'Modal.Header';
+  (FakeModal.Body as { displayName?: string }).displayName = 'Modal.Body';
+  (FakeModal.Footer as { displayName?: string }).displayName = 'Modal.Footer';
+  (FakeModal.CloseButton as { displayName?: string }).displayName = 'Modal.CloseButton';
 
   return {
     createModal: () => FakeModal,

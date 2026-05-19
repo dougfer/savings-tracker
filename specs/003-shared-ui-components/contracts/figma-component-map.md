@@ -119,23 +119,23 @@
 
 ## Avatar
 
-### Sizes
+**Source**: Pencil `app.pen` → node `M8Qbp`.
 
-| Size | Dimensions | Fallback Font |
-|------|-----------|--------------|
-| xs | 24×24px (`w-6 h-6`) | `text-caption` |
-| sm | 32×32px (`w-8 h-8`) | `text-caption` |
-| md | 40×40px (`w-10 h-10`) | `text-body-sm` |
-| lg | 48×48px (`w-12 h-12`) | `text-body` |
-| xl | 64×64px (`w-16 h-16`) | `text-body` |
-| 2xl | 80×80px (`w-20 h-20`) | `text-heading-sm` |
+### Layout
 
-### Appearance
+| Property | Value |
+|----------|--------|
+| Size | 48×48 (`h-12 w-12`) |
+| Shape | `rounded-full` |
+| Fallback text | `font-sans-medium text-body text-neutral-300` |
 
-- Shape: `rounded-full`
-- Fallback background: `bg-muted`
-- Fallback text: `text-muted-foreground`
-- Badge: `bg-success rounded-full` (online indicator)
+### States
+
+| State | Background | Border |
+|-------|------------|--------|
+| Default | `bg-neutral-700` | `border-neutral-500` |
+| Hover | `bg-neutral-600` | `border-neutral-400` |
+| Focus visible | Default bg + orange/dark shadow ring | — |
 
 ---
 

@@ -79,14 +79,14 @@ Variants follow Pencil (`primary`, `secondary`, `tertiary`). Pass the label as `
 
 ### Avatar
 
+Pencil layout (48×48). Place `FallbackText` before `Image`:
+
 ```tsx
-<AppAvatar size="lg">
-  <AppAvatar.FallbackText>John Doe</AppAvatar.FallbackText>
+<AppAvatar accessibilityLabel="Jane Smith">
+  <AppAvatar.FallbackText>AH</AppAvatar.FallbackText>
   <AppAvatar.Image source={{ uri: profileImageUrl }} />
 </AppAvatar>
 ```
-
-Note: Place `FallbackText` before `Image` in JSX for iOS compatibility.
 
 ### ProgressBar
 
