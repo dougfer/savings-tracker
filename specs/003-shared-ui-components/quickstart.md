@@ -63,16 +63,11 @@ Variants follow Pencil (`primary`, `secondary`, `tertiary`). Pass the label as `
 
 ### Checkbox
 
+Pencil indicator (16×16 circle; orange inset dot when checked):
+
 ```tsx
-<AppCheckbox
-  value="terms"
-  isChecked={agreed}
-  onChange={setAgreed}
-  size="md"
->
-  <AppCheckbox.Indicator>
-    <AppCheckbox.Icon as={CheckIcon} />
-  </AppCheckbox.Indicator>
+<AppCheckbox value="terms" isChecked={agreed} onChange={setAgreed}>
+  <AppCheckbox.Indicator />
   <AppCheckbox.Label>I agree to the terms</AppCheckbox.Label>
 </AppCheckbox>
 ```

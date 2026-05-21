@@ -7,6 +7,8 @@
  *   <AppAvatar.Image source={{ uri: profileImageUrl }} />
  * </AppAvatar>
  *
+ * Focus ring uses `native:`/`web:` utilities for iOS, Android, and web.
+ *
  * @see specs/003-shared-ui-components/quickstart.md — Avatar
  */
 import {
@@ -31,6 +33,7 @@ import { useFocus, useFocusRing, useHover } from '@gluestack-ui/utils/aria';
 import { composeEventHandlers } from '@gluestack-ui/utils/common';
 import { tva } from '@gluestack-ui/utils/nativewind-utils';
 
+import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
 import { withStates } from '@/lib/gluestack/with-states-interop';
 
 // ---------------------------------------------------------------------------
@@ -43,7 +46,7 @@ export const appAvatarRootVariants = tva({
     'items-center justify-center',
     'border border-neutral-500 bg-neutral-700',
     'data-[hover=true]:border-neutral-400 data-[hover=true]:bg-neutral-600',
-    'data-[focus-visible=true]:shadow-[0_0_0_4px_#FF5722,0_0_0_6px_#101010]',
+    pencilFocusRingClasses,
   ].join(' '),
 });
 

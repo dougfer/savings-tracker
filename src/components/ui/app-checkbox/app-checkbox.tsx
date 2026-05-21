@@ -1,14 +1,28 @@
-import { createContext, useContext, type ReactNode } from 'react';
+/**
+ * AppCheckbox — Gluestack `createCheckbox` + estilos Pencil (`app.pen` node Q5Ei9).
+ * Estado (checked, disabled, focus, hover) vem do creator; subparts: `Indicator`, `Label`.
+ *
+ * @example
+ * <AppCheckbox value="terms" isChecked={agreed} onChange={setAgreed}>
+ *   <AppCheckbox.Indicator />
+ *   <AppCheckbox.Label>I agree to the terms</AppCheckbox.Label>
+ * </AppCheckbox>
+ *
+ * @see specs/003-shared-ui-components/quickstart.md — Checkbox
+ */
+import { type ReactNode } from 'react';
 
 import { Pressable, Text, View, type PressableProps, type TextProps, type ViewProps } from 'react-native';
 
 import { createCheckbox } from '@gluestack-ui/core/checkbox/creator';
+import { tva } from '@gluestack-ui/utils/nativewind-utils';
 import { cssInterop } from 'nativewind';
 
+import { pencilFocusRingWithBgClasses } from '@/lib/nativewind/pencil-focus-ring';
 import { withStates } from '@/lib/gluestack/with-states-interop';
 
 // ---------------------------------------------------------------------------
-// Headless UI primitive via v3 creator
+// Gluestack Checkbox (headless)
 // ---------------------------------------------------------------------------
 
 const StyledRoot = withStates(Pressable);
@@ -31,124 +45,79 @@ cssInterop(UICheckbox.Icon, { className: 'style' } as any);
 cssInterop(UICheckbox.Label, { className: 'style' } as any);
 
 // ---------------------------------------------------------------------------
-// Variant / size maps
+// Pencil styles (Q5Ei9)
 // ---------------------------------------------------------------------------
 
-type CheckboxSize = 'sm' | 'md' | 'lg';
+export const appCheckboxRootVariants = tva({
+  base: ['flex-row items-center gap-2', 'data-[disabled=true]:opacity-50'].join(' '),
+});
 
-type AppCheckboxCtx = {
-  size: CheckboxSize;
-  isDisabled: boolean;
-  isInvalid: boolean;
-};
+export const appCheckboxIndicatorVariants = tva({
+  base: [
+    'h-4 w-4 shrink-0 items-center justify-center rounded-full border border-neutral-500',
+    pencilFocusRingWithBgClasses,
+  ].join(' '),
+});
 
-const AppCheckboxContext = createContext<AppCheckboxCtx | null>(null);
+const CHECKBOX_DOT_CLASS = 'h-2 w-2 rounded-full bg-orange-400';
 
-function useAppCheckboxCtx(): AppCheckboxCtx {
-  const ctx = useContext(AppCheckboxContext);
-  if (!ctx) throw new Error('AppCheckbox subcomponents must be used inside <AppCheckbox>');
-  return ctx;
-}
-
-const indicatorSizeCls: Record<CheckboxSize, string> = {
-  sm: 'w-4 h-4',
-  md: 'w-5 h-5',
-  lg: 'w-6 h-6',
-};
-
-const labelSizeCls: Record<CheckboxSize, string> = {
-  sm: 'text-body-sm',
-  md: 'text-body',
-  lg: 'text-body',
-};
+export const appCheckboxLabelClassName = 'font-sans-medium text-body text-neutral-300';
 
 // ---------------------------------------------------------------------------
-// Compound components
+// Compound wrappers (className only)
 // ---------------------------------------------------------------------------
 
 type AppCheckboxRootProps = Omit<PressableProps, 'children'> & {
-  size?: CheckboxSize;
-  isDisabled?: boolean;
-  isInvalid?: boolean;
   value: string;
   isChecked?: boolean;
   defaultIsChecked?: boolean;
   onChange?: (isSelected: boolean) => void;
+  isDisabled?: boolean;
+  isInvalid?: boolean;
+  isIndeterminate?: boolean;
+  isReadOnly?: boolean;
   className?: string;
   children?: ReactNode;
 };
 
-function AppCheckboxRoot({
-  size = 'md',
-  isDisabled = false,
-  isInvalid = false,
-  className,
-  children,
-  ...props
-}: AppCheckboxRootProps) {
-  const cls = [
-    'flex-row items-center gap-2',
-    'data-[disabled=true]:opacity-40',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
-
+function AppCheckboxRoot({ className, children, ...props }: AppCheckboxRootProps) {
+  const cls = appCheckboxRootVariants({ class: className });
   return (
-    <AppCheckboxContext.Provider value={{ size, isDisabled, isInvalid }}>
-      <UICheckbox
-        {...(props as any)}
-        isDisabled={isDisabled}
-        isInvalid={isInvalid}
-        className={cls}
-      >
-        {children}
-      </UICheckbox>
-    </AppCheckboxContext.Provider>
+    <UICheckbox {...(props as any)} className={cls}>
+      {children}
+    </UICheckbox>
   );
 }
 
-function AppCheckboxIndicator({ className, ...props }: ViewProps & { className?: string }) {
-  const { size, isInvalid } = useAppCheckboxCtx();
-  const cls = [
-    'border-2 border-input rounded-sm items-center justify-center',
-    'data-[checked=true]:bg-primary data-[checked=true]:border-primary',
-    'data-[focus-visible=true]:ring-2 data-[focus-visible=true]:ring-ring',
-    indicatorSizeCls[size],
-    isInvalid ? 'border-destructive' : '',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
-  return <UICheckbox.Indicator {...(props as any)} className={cls} />;
+type AppCheckboxIndicatorProps = ViewProps & { className?: string };
+
+function AppCheckboxIndicator({ className, ...props }: AppCheckboxIndicatorProps) {
+  const cls = appCheckboxIndicatorVariants({ class: className });
+  return (
+    <UICheckbox.Indicator {...(props as any)} className={cls}>
+      <UICheckbox.Icon>
+        <View testID="app-checkbox-dot" className={CHECKBOX_DOT_CLASS} />
+      </UICheckbox.Icon>
+    </UICheckbox.Indicator>
+  );
 }
 
-function AppCheckboxIcon({
-  className,
-  as: AsIcon,
-  ...props
-}: ViewProps & { className?: string; as: React.ComponentType<any> }) {
-  const cls = ['text-primary-foreground', className].filter(Boolean).join(' ');
-  return <UICheckbox.Icon {...(props as any)} as={AsIcon} className={cls} />;
-}
+type AppCheckboxLabelProps = TextProps & { className?: string };
 
-function AppCheckboxLabel({ className, ...props }: TextProps & { className?: string }) {
-  const { size } = useAppCheckboxCtx();
-  const cls = ['text-foreground', labelSizeCls[size], className].filter(Boolean).join(' ');
+function AppCheckboxLabel({ className, ...props }: AppCheckboxLabelProps) {
+  const cls = [appCheckboxLabelClassName, className].filter(Boolean).join(' ');
   return <UICheckbox.Label {...(props as any)} className={cls} />;
 }
 
 // ---------------------------------------------------------------------------
-// Display names & compound export
+// Export
 // ---------------------------------------------------------------------------
 
 AppCheckboxRoot.displayName = 'AppCheckbox';
 AppCheckboxIndicator.displayName = 'AppCheckbox.Indicator';
-AppCheckboxIcon.displayName = 'AppCheckbox.Icon';
 AppCheckboxLabel.displayName = 'AppCheckbox.Label';
 
 export const AppCheckbox = Object.assign(AppCheckboxRoot, {
   Indicator: AppCheckboxIndicator,
-  Icon: AppCheckboxIcon,
   Label: AppCheckboxLabel,
 });

@@ -98,6 +98,8 @@ All visual values (colors, spacing, radius, typography) reference tokens from `t
 
 ## 3. AppCheckbox
 
+**Design source**: Pencil `app.pen` node `Q5Ei9` (`_Checkbox base`).
+
 ### Props (Root)
 
 | Prop | Type | Default | Description |
@@ -106,31 +108,37 @@ All visual values (colors, spacing, radius, typography) reference tokens from `t
 | `isChecked` | `boolean` | `false` | Controlled checked state |
 | `defaultIsChecked` | `boolean` | `false` | Uncontrolled initial state |
 | `onChange` | `(checked: boolean) => void` | — | Change handler |
-| `isDisabled` | `boolean` | `false` | Disables interaction |
-| `isInvalid` | `boolean` | `false` | Error state |
-| `isIndeterminate` | `boolean` | `false` | Indeterminate visual |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size preset |
+| `isDisabled` | `boolean` | `false` | Disables interaction (`opacity-50`) |
+| `isInvalid` | `boolean` | `false` | Passed to Gluestack (no Pencil visual) |
+| `isIndeterminate` | `boolean` | `false` | Passed to Gluestack (no Pencil visual) |
+| `isReadOnly` | `boolean` | `false` | Passed to Gluestack |
 | `className` | `string?` | — | Additional NativeWind classes |
-| `children` | `ReactNode` | — | Compound subparts |
+| `children` | `ReactNode` | — | `Indicator` + `Label` |
 
 ### Compound Subparts
 
-| Subpart | Base Primitive | Purpose |
-|---------|----------------|---------|
-| `AppCheckbox.Indicator` | Gluestack `CheckboxIndicator` | The check box visual |
-| `AppCheckbox.Icon` | Gluestack `CheckboxIcon` | Check mark icon |
-| `AppCheckbox.Label` | Gluestack `CheckboxLabel` | Associated label text |
+| Subpart | Purpose |
+|---------|---------|
+| `AppCheckbox.Indicator` | 16×16 circle; orange inset dot when checked (no separate icon slot) |
+| `AppCheckbox.Label` | Associated label (`text-neutral-300`) |
 
-### States
+### Layout
 
-| State | Visual | Behavioral |
-|-------|--------|------------|
-| Unchecked | Empty indicator, border visible | Interactive |
-| Checked | Filled indicator with check icon | Interactive |
-| Indeterminate | Dash/minus icon | Interactive |
-| Focused | Ring indicator on indicator | Interactive |
-| Disabled | Muted opacity | Non-interactive |
-| Invalid | Error border color | Interactive |
+| Element | Value |
+|---------|--------|
+| Indicator | `h-4 w-4`, `rounded-full`, `border-neutral-500` |
+| Checked mark | Inset shadow `#FF5722` (8px dot) |
+| Root gap | `gap-2` (8px) |
+| Label | `font-sans-medium text-body text-neutral-300` |
+
+### States (Pencil)
+
+| State | Indicator visual |
+|-------|------------------|
+| Default, unchecked | Border only |
+| Default / Hover, checked | Border + orange inset dot |
+| Focus | `bg-neutral-900` + ring (`native:` border / `web:` shadow) |
+| Disabled | Root `opacity-50`, non-interactive |
 
 ---
 

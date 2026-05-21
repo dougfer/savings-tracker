@@ -253,13 +253,16 @@ import { View } from 'react-native';
 ### 5.3 AppCheckbox (Prioridade 2)
 
 **Creator:** `createCheckbox`
-**Primitivos RN:** `Pressable` (Root), `View` (Indicator), SVG (Icon), `Text` (Label)
+**Design:** Pencil `app.pen` node `Q5Ei9` — indicador 16×16; sem `size` presets; sem subparte `Icon` (ponto laranja via inset shadow).
+**Primitivos RN:** `Pressable` (Root), `View` (Indicator), `Text` (Label)
 
-**Data attributes disponíveis:**
-- Root: `data-checked="true"`, `data-disabled="true"`, `data-invalid="true"`, `data-hover="true"`
-- Indicator: `data-checked="true"`, `data-focus-visible="true"`
+**Data attributes (Indicator):** `data-checked`, `data-focus-visible`, `data-disabled`, `data-hover`
 
-**Nota:** O componente atual já usa `data-[checked=true]:` no Indicator. A migração aqui é trocar o import source e remover o useContext manual.
+**Estilos Pencil → NativeWind:**
+- Unchecked: `border border-neutral-500 rounded-full`
+- Checked: `data-[checked=true]:shadow-[inset_0_0_0_4px_#FF5722]`
+- Focus: `data-[focus-visible=true]:bg-neutral-900` + sombra externa laranja/escura
+- Label: `text-neutral-300 text-body font-sans-medium`
 
 ---
 

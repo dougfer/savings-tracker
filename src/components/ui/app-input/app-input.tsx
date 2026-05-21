@@ -13,14 +13,14 @@
  *
  * @see specs/003-shared-ui-components/quickstart.md — Input
  */
-import { type FC, type ReactNode, forwardRef } from 'react';
+import { type FC, type ReactNode } from 'react';
 
-import { Pressable, Text, TextInput, View, type TextInputProps, type TextProps, type ViewProps } from 'react-native';
-
-import type { SvgProps } from 'react-native-svg';
+import { Pressable, Text, TextInput, View, type TextInputProps, type TextProps } from 'react-native';
 
 import { createInput } from '@gluestack-ui/core/input/creator';
+import { tva, useStyleContext, withStyleContext } from '@gluestack-ui/utils/nativewind-utils';
 import { cssInterop } from 'nativewind';
+import type { SvgProps } from 'react-native-svg';
 
 import AlertCircleIcon from '@/assets/icons/alert-circle.svg';
 import ArrowDownIcon from '@/assets/icons/arrow-down.svg';
@@ -35,6 +35,7 @@ import SortByIcon from '@/assets/icons/sort-by.svg';
 import VectorIcon from '@/assets/icons/vector.svg';
 import XCloseIcon from '@/assets/icons/x-close.svg';
 import { withStates } from '@/lib/gluestack/with-states-interop';
+import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
 
 const ICON_MAP = {
   'alert-circle': AlertCircleIcon,
@@ -54,25 +55,72 @@ const ICON_MAP = {
 export type IconName = keyof typeof ICON_MAP;
 
 // ---------------------------------------------------------------------------
+// Style context scope
+// ---------------------------------------------------------------------------
+
+const INPUT_SCOPE = 'APP_INPUT';
+
+type AppInputStyleContext = {
+  isInvalid: boolean;
+  isDisabled: boolean;
+};
+
+function useAppInputStyle(): AppInputStyleContext {
+  const ctx = useStyleContext(INPUT_SCOPE) as AppInputStyleContext | undefined;
+  return ctx ?? { isInvalid: false, isDisabled: false };
+}
+
+// ---------------------------------------------------------------------------
 // Headless UI primitive via v3 creator
 // ---------------------------------------------------------------------------
 
-const StyledRoot = withStates(View);
-
-const PrimitiveIcon = forwardRef<View, ViewProps>(function PrimitiveIcon(props, ref) {
-  return <View {...props} ref={ref} />;
-});
+const StyledGroup = withStates(withStyleContext(View, INPUT_SCOPE));
+const StyledField = withStates(withStyleContext(TextInput, INPUT_SCOPE));
+const StyledSlot = withStates(withStyleContext(Pressable, INPUT_SCOPE));
+const StyledIcon = withStates(View);
 
 const UIInput = createInput({
-  Root: StyledRoot,
-  Icon: PrimitiveIcon,
-  Slot: Pressable,
-  Input: TextInput,
+  Root: StyledGroup,
+  Icon: StyledIcon,
+  Slot: StyledSlot,
+  Input: StyledField,
 });
 
 cssInterop(UIInput, { className: 'style' } as any);
 cssInterop(UIInput.Input, { className: 'style' } as any);
 cssInterop(UIInput.Slot, { className: 'style' } as any);
+cssInterop(UIInput.Icon, { className: 'style' } as any);
+
+// ---------------------------------------------------------------------------
+// Variants — Pencil node QxrgC
+// ---------------------------------------------------------------------------
+
+export const appInputGroupVariants = tva({
+  base: [
+    'h-[54px] rounded-lg bg-neutral-800 border border-neutral-500 px-4 items-center gap-3 flex flex-row',
+    'data-[focus=true]:border-orange-400',
+    'data-[invalid=true]:border-destructive',
+    'data-[disabled=true]:opacity-50',
+    pencilFocusRingClasses,
+  ].join(' '),
+});
+
+export const appInputHelperTextVariants = tva({
+  base: 'font-sans-medium text-body-sm',
+  variants: {
+    variant: {
+      default: 'text-neutral-300',
+      error: 'text-destructive',
+    },
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
+
+export const appInputLabelClassName = 'font-sans-medium text-body text-neutral-0';
+
+export const appInputFieldClassName = 'font-sans-medium text-body text-neutral-0 flex-1 border-0 outline-none ring-0 shadow-none';
 
 // ---------------------------------------------------------------------------
 // Project-level compound component
@@ -87,10 +135,7 @@ type AppInputRootProps = Readonly<{
   children: ReactNode;
 }>;
 
-function AppInputRoot({
-  className,
-  children,
-}: AppInputRootProps) {
+function AppInputRoot({ className, children }: AppInputRootProps) {
   return (
     <View className={['w-full gap-2.5', className].filter(Boolean).join(' ')}>
       {children}
@@ -105,7 +150,7 @@ function AppInputRoot({
 type AppInputLabelProps = TextProps & { className?: string };
 
 function AppInputLabel({ className, ...props }: AppInputLabelProps) {
-  const cls = ['font-sans-medium text-body text-neutral-0', className].filter(Boolean).join(' ');
+  const cls = [appInputLabelClassName, className].filter(Boolean).join(' ');
   return <Text {...props} className={cls} />;
 }
 
@@ -118,26 +163,12 @@ type AppInputGroupProps = Readonly<{
   children: ReactNode;
 }>;
 
-function AppInputGroup({
-  isInvalid,
-  isDisabled,
-  isReadOnly,
-  isRequired,
-  className,
-  children,
-}: AppInputGroupProps) {
-  const cls = [
-    'h-[54px] rounded-md bg-neutral-700 border border-neutral-500 px-4 items-center gap-3 flex flex-row',
-    'data-[focus=true]:border-orange-400',
-    'data-[invalid=true]:border-destructive',
-    'data-[disabled=true]:opacity-50',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+function AppInputGroup({ isInvalid, isDisabled, isReadOnly, isRequired, className, children }: AppInputGroupProps) {
+  const cls = appInputGroupVariants({ class: className });
 
   return (
     <UIInput
+      context={{ isInvalid, isDisabled } satisfies AppInputStyleContext}
       isInvalid={isInvalid}
       isDisabled={isDisabled}
       isReadOnly={isReadOnly}
@@ -154,12 +185,7 @@ type AppInputFieldProps = Omit<TextInputProps, 'className'> & {
 };
 
 function AppInputField({ className, ...props }: AppInputFieldProps) {
-  const cls = [
-    'font-sans-medium text-body text-neutral-0 flex-1 border-0 outline-none ring-0 shadow-none',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const cls = [appInputFieldClassName, className].filter(Boolean).join(' ');
 
   return <UIInput.Input {...(props as any)} placeholderTextColor="#B7B7B7" className={cls} />;
 }
@@ -171,6 +197,7 @@ type AppInputSlotProps = Readonly<{
 
 function AppInputSlot({ name, className }: AppInputSlotProps) {
   const Icon = ICON_MAP[name];
+
   return (
     <UIInput.Slot className={className}>
       <Icon width={20} height={20} color="#B7B7B7" />
@@ -178,25 +205,22 @@ function AppInputSlot({ name, className }: AppInputSlotProps) {
   );
 }
 
-type HelperTextVariant = 'default' | 'error';
-
 type AppInputHelperTextProps = TextProps & {
-  variant?: HelperTextVariant;
+  variant?: 'default' | 'error';
   className?: string;
 };
 
 function AppInputHelperText({ variant = 'default', className, ...props }: AppInputHelperTextProps) {
-  const textCls = [
-    'font-sans-medium text-body-sm',
-    variant === 'error' ? 'text-destructive' : 'text-neutral-300',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const { isInvalid } = useAppInputStyle();
+  const effectiveVariant = isInvalid ? 'error' : variant;
+  const cls = appInputHelperTextVariants({ variant: effectiveVariant, class: className });
 
   return (
     <View className="flex-row items-center gap-2">
-      <Text {...props} className={textCls} />
+      {effectiveVariant === 'error' && (
+        <AlertCircleIcon width={16} height={16} color="#ef4444" />
+      )}
+      <Text {...props} className={cls} />
     </View>
   );
 }

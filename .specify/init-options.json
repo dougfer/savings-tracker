@@ -1,10 +1,9 @@
 {
-  "ai": "cursor-agent",
-  "ai_skills": true,
+  "ai": "opencode",
   "branch_numbering": "sequential",
-  "context_file": ".cursor/rules/specify-rules.mdc",
-  "here": false,
-  "integration": "cursor-agent",
-  "script": "ps",
-  "speckit_version": "0.8.7"
+  "context_file": "AGENTS.md",
+  "here": true,
+  "integration": "opencode",
+  "script": "sh",
+  "speckit_version": "0.8.13"
 }

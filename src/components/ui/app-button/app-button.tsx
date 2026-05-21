@@ -1,6 +1,7 @@
 /**
  * AppButton — Pencil `app.pen` node UpBXR. Variants: `primary` | `secondary` | `tertiary`.
  * Label as string `children`; optional `AppButton.Spinner` when `isLoading`.
+ * Focus ring uses `native:`/`web:` utilities for iOS, Android, and web.
  *
  * @example
  * <AppButton variant="primary" onPress={handleSave}>Save Goal</AppButton>
@@ -22,6 +23,7 @@ import { createButton } from '@gluestack-ui/core/button/creator';
 import { tva, useStyleContext, withStyleContext } from '@gluestack-ui/utils/nativewind-utils';
 import { cssInterop } from 'nativewind';
 
+import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
 import { withStates } from '@/lib/gluestack/with-states-interop';
 
 // ---------------------------------------------------------------------------
@@ -66,18 +68,18 @@ export const appButtonRootVariants = tva({
       primary: [
         'bg-orange-400 px-5',
         'data-[hover=true]:bg-primary',
-        'data-[focus-visible=true]:shadow-[0_0_0_4px_#FF5722,0_0_0_6px_#101010]',
+        pencilFocusRingClasses,
       ].join(' '),
       secondary: [
         'bg-neutral-800 border-secondary px-5',
         'data-[hover=true]:bg-neutral-700',
-        'data-[focus-visible=true]:shadow-[0_0_0_4px_#FF5722,0_0_0_6px_#101010]',
+        pencilFocusRingClasses,
       ].join(' '),
       tertiary: [
         'bg-transparent px-4',
         'data-[hover=true]:bg-neutral-800',
         'data-[focus-visible=true]:bg-neutral-900',
-        'data-[focus-visible=true]:shadow-[0_0_0_4px_#FF5722,0_0_0_6px_#101010]',
+        pencilFocusRingClasses,
       ].join(' '),
     },
   },

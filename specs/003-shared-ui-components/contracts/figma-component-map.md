@@ -15,7 +15,7 @@
 | Component | Node ID | Figma URL | Extraction Status |
 |-----------|---------|-----------|-------------------|
 | Button | Pencil `UpBXR` (`app.pen`) | — | ✅ Pencil — Primary / Secondary / Tertiary |
-| Checkbox | `291:1557` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=291-1557) | ⚠️ 429 — derived from tokens |
+| Checkbox | Pencil `Q5Ei9` (`app.pen`) | — | ✅ Pencil — Default / Hover / Focus |
 | Dropdown Menu | `271:996` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=271-996) | ⚠️ 429 — derived from tokens |
 | ProgressBar | `297:1695` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=297-1695) | ⚠️ 429 — derived from tokens |
 | Input | `307:1217` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=307-1217) | ⚠️ 429 — derived from tokens |
@@ -96,24 +96,25 @@
 
 ## Checkbox
 
-### Sizes
+**Source**: Pencil `app.pen` → node `Q5Ei9`.
 
-| Size | Indicator | Label Font |
-|------|-----------|-----------|
-| sm | 16×16px | `text-body-sm` |
-| md | 20×20px | `text-body` |
-| lg | 24×24px | `text-body` |
+### Layout
+
+| Element | Value |
+|---------|--------|
+| Indicator | 16×16 (`h-4 w-4`), `rounded-full`, `border-neutral-500` |
+| Checked | Inset dot `shadow-[inset_0_0_0_4px_#FF5722]` |
+| Label | `font-sans-medium text-body text-neutral-300` |
+| Row gap | `gap-2` |
 
 ### States
 
-| State | Indicator Visual |
-|-------|-----------------|
-| Unchecked | `bg-transparent border-2 border-input` |
-| Checked | `bg-primary border-primary` |
-| Indeterminate | `bg-primary border-primary` (dash icon) |
-| Focused | `ring-2 ring-ring` |
-| Disabled | `opacity-40` |
-| Invalid | `border-destructive` |
+| State | Indicator visual |
+|-------|------------------|
+| Unchecked | Border ring only |
+| Checked | Border + orange inset dot |
+| Focus | `bg-neutral-900` + orange/dark outer shadow |
+| Disabled | Root `opacity-50` |
 
 ---
 

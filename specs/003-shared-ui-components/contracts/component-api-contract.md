@@ -31,7 +31,7 @@ import { AppButton } from '@/components/ui';
 |-----------|-------------|----------|----------|
 | `AppButton` | `app-button/` | Yes | Label via `children` (string) or `.Text`; `.Spinner` for loading |
 | `AppInput` | `app-input/` | Yes | `.Field`, `.Slot`, `.Icon`, `.Label`, `.HelperText`, `.ErrorText`, `.ErrorIcon` |
-| `AppCheckbox` | `app-checkbox/` | Yes | `.Indicator`, `.Icon`, `.Label` |
+| `AppCheckbox` | `app-checkbox/` | Yes | `.Indicator`, `.Label` |
 | `AppAvatar` | `app-avatar/` | Yes | `.Image`, `.FallbackText` |
 | `AppProgressBar` | `app-progress-bar.tsx` | Yes | `.Track`, `.Label` |
 | `AppDropdownMenu` | `app-dropdown-menu/` | Yes | `.Trigger`, `.Content`, `.Item`, `.ItemLabel`, `.ItemIcon`, `.Separator` |
