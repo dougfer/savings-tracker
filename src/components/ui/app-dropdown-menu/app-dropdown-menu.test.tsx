@@ -1,62 +1,85 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react-native';
+
 import { Pressable, Text, View } from 'react-native';
-import { GluestackAppProvider } from '@/lib/providers/GluestackAppProvider';
+
+import { render, screen, fireEvent } from '@testing-library/react-native';
+
 import { AppDropdownMenu } from './app-dropdown-menu';
 
 const EditIcon = () => null;
 
-function wrap(node: React.ReactElement) {
-  return <GluestackAppProvider>{node}</GluestackAppProvider>;
-}
+jest.mock('@gluestack-ui/core/menu/creator', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const ReactNative = require('react-native');
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const R = require('react');
+
+  return {
+    createMenu: () => {
+      function FakeMenu({ trigger, children, ...props }: any) {
+        return R.createElement(
+          ReactNative.View,
+          props,
+          trigger?.({ onPress: () => {} }, { open: false }),
+          children,
+        );
+      }
+      FakeMenu.Item = R.forwardRef(({ children, ...props }: any, ref: any) =>
+        R.createElement(ReactNative.Pressable, { ...props, ref }, children),
+      );
+      FakeMenu.ItemLabel = R.forwardRef(({ children, ...props }: any, ref: any) =>
+        R.createElement(ReactNative.Text, { ...props, ref }, children),
+      );
+      FakeMenu.Separator = R.forwardRef((props: any, ref: any) =>
+        R.createElement(ReactNative.View, { ...props, ref }),
+      );
+      FakeMenu.displayName = 'Menu';
+      return FakeMenu;
+    },
+  };
+});
 
 describe('AppDropdownMenu', () => {
   describe('Trigger rendering', () => {
     it('renders trigger element', () => {
       render(
-        wrap(
-          <AppDropdownMenu>
-            <AppDropdownMenu.Trigger>
-              {(triggerProps) => (
-                <Pressable {...triggerProps} testID="trigger">
-                  <Text>Open</Text>
-                </Pressable>
-              )}
-            </AppDropdownMenu.Trigger>
-            <AppDropdownMenu.Content>
-              <AppDropdownMenu.Item key="edit" textValue="Edit">
-                <AppDropdownMenu.ItemLabel>Edit Goal</AppDropdownMenu.ItemLabel>
-              </AppDropdownMenu.Item>
-            </AppDropdownMenu.Content>
-          </AppDropdownMenu>,
-        ),
+        <AppDropdownMenu>
+          <AppDropdownMenu.Trigger>
+            {(triggerProps) => (
+              <Pressable {...triggerProps} testID="trigger">
+                <Text>Open</Text>
+              </Pressable>
+            )}
+          </AppDropdownMenu.Trigger>
+          <AppDropdownMenu.Content>
+            <AppDropdownMenu.Item key="edit" textValue="Edit">
+              <AppDropdownMenu.ItemLabel>Edit Goal</AppDropdownMenu.ItemLabel>
+            </AppDropdownMenu.Item>
+          </AppDropdownMenu.Content>
+        </AppDropdownMenu>,
       );
       expect(screen.getByTestId('trigger')).toBeTruthy();
       expect(screen.getByText('Open')).toBeTruthy();
     });
 
     it('trigger is pressable', () => {
-      const onPress = jest.fn();
       render(
-        wrap(
-          <AppDropdownMenu>
-            <AppDropdownMenu.Trigger>
-              {(triggerProps) => (
-                <Pressable {...triggerProps} testID="trigger" onPress={onPress}>
-                  <Text>Open</Text>
-                </Pressable>
-              )}
-            </AppDropdownMenu.Trigger>
-            <AppDropdownMenu.Content>
-              <AppDropdownMenu.Item key="edit" textValue="Edit">
-                <AppDropdownMenu.ItemLabel>Edit</AppDropdownMenu.ItemLabel>
-              </AppDropdownMenu.Item>
-            </AppDropdownMenu.Content>
-          </AppDropdownMenu>,
-        ),
+        <AppDropdownMenu>
+          <AppDropdownMenu.Trigger>
+            {(triggerProps) => (
+              <Pressable {...triggerProps} testID="trigger">
+                <Text>Open</Text>
+              </Pressable>
+            )}
+          </AppDropdownMenu.Trigger>
+          <AppDropdownMenu.Content>
+            <AppDropdownMenu.Item key="edit" textValue="Edit">
+              <AppDropdownMenu.ItemLabel>Edit</AppDropdownMenu.ItemLabel>
+            </AppDropdownMenu.Item>
+          </AppDropdownMenu.Content>
+        </AppDropdownMenu>,
       );
       fireEvent.press(screen.getByTestId('trigger'));
-      // Trigger press is handled (Gluestack Menu manages open state internally)
       expect(screen.getByTestId('trigger')).toBeTruthy();
     });
   });
@@ -64,11 +87,9 @@ describe('AppDropdownMenu', () => {
   describe('Separator subpart', () => {
     it('renders Separator without crashing', () => {
       render(
-        wrap(
-          <View>
-            <AppDropdownMenu.Separator testID="separator" />
-          </View>,
-        ),
+        <View>
+          <AppDropdownMenu.Separator testID="separator" />
+        </View>,
       );
       expect(screen.getByTestId('separator')).toBeTruthy();
     });
@@ -77,11 +98,9 @@ describe('AppDropdownMenu', () => {
   describe('ItemLabel subpart', () => {
     it('renders ItemLabel text in isolation', () => {
       render(
-        wrap(
-          <View>
-            <AppDropdownMenu.ItemLabel>Edit Goal</AppDropdownMenu.ItemLabel>
-          </View>,
-        ),
+        <View>
+          <AppDropdownMenu.ItemLabel>Edit Goal</AppDropdownMenu.ItemLabel>
+        </View>,
       );
       expect(screen.getByText('Edit Goal')).toBeTruthy();
     });
@@ -91,11 +110,9 @@ describe('AppDropdownMenu', () => {
     it('renders ItemIcon without crashing', () => {
       expect(() =>
         render(
-          wrap(
-            <View>
-              <AppDropdownMenu.ItemIcon as={EditIcon} />
-            </View>,
-          ),
+          <View>
+            <AppDropdownMenu.ItemIcon as={EditIcon} />
+          </View>,
         ),
       ).not.toThrow();
     });

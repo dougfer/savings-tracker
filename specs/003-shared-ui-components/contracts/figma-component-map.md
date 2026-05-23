@@ -14,8 +14,8 @@
 
 | Component | Node ID | Figma URL | Extraction Status |
 |-----------|---------|-----------|-------------------|
-| Button | `271:3896` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=271-3896) | ⚠️ 429 — derived from tokens |
-| Checkbox | `291:1557` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=291-1557) | ⚠️ 429 — derived from tokens |
+| Button | Pencil `UpBXR` (`app.pen`) | — | ✅ Pencil — Primary / Secondary / Tertiary |
+| Checkbox | Pencil `Q5Ei9` (`app.pen`) | — | ✅ Pencil — Default / Hover / Focus |
 | Dropdown Menu | `271:996` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=271-996) | ⚠️ 429 — derived from tokens |
 | ProgressBar | `297:1695` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=297-1695) | ⚠️ 429 — derived from tokens |
 | Input | `307:1217` | [Open](https://www.figma.com/design/UtM4hqbnpAz8GAmCUO3ERr/savings-tracker?node-id=307-1217) | ⚠️ 429 — derived from tokens |
@@ -34,32 +34,33 @@
 
 ## Button
 
-### Variants
+**Source**: Pencil `app.pen` → node `UpBXR` (frame name: `Button`).
 
-| Variant | Background | Text Color | Border | Radius |
-|---------|------------|------------|--------|--------|
-| primary | `bg-primary` (`#EB430E`) | `text-primary-foreground` (`#FFFFFF`) | none | `rounded-xl` |
-| secondary | `bg-secondary` (`#3C3B40`) | `text-secondary-foreground` (`#FFFFFF`) | none | `rounded-xl` |
-| outline | `bg-transparent` | `text-foreground` (`#02012C`) | `border border-border` | `rounded-xl` |
-| destructive | `bg-destructive` (`#EF4444`) | `text-destructive-foreground` (`#FFFFFF`) | none | `rounded-xl` |
+### Variants (Hierarchy)
 
-### Sizes
+| Variant | Background | Text | Border | Radius / padding |
+|---------|------------|------|--------|------------------|
+| primary | `bg-orange-400` → hover `bg-primary` | `text-neutral-900` | — | `rounded-full`, `py-3 px-5`, `gap-2.5` |
+| secondary | `bg-neutral-800` → hover `bg-neutral-700` | `text-neutral-0`; disabled `text-neutral-400` | `border-secondary` | `rounded-full`, `py-3 px-5` |
+| tertiary | transparent → hover `bg-neutral-800`, focus `bg-neutral-900` | `text-neutral-0`; disabled `text-neutral-400` | — | `rounded-full`, `py-3 px-4` |
 
-| Size | Min Height | Padding H | Padding V | Font Size | Icon Size |
-|------|-----------|-----------|-----------|-----------|-----------|
-| sm | 36px | `px-3` (12px) | `py-1.5` (6px) | `text-body-sm` | 16px |
-| md | 44px | `px-4` (16px) | `py-2.5` (10px) | `text-body` | 20px |
-| lg | 52px | `px-5` (20px) | `py-3` (12px) | `text-body` | 24px |
+### Layout (single size)
+
+| Property | Token / value |
+|----------|----------------|
+| Min height | 48px |
+| Typography | `font-sans-medium text-body` (16px, weight 500) |
+| Icon (in design) | 20×20 in examples |
 
 ### States
 
-| State | Visual Override |
-|-------|----------------|
-| Hover (web) | `data-[hover=true]:opacity-90` |
+| State | Visual override |
+|-------|-----------------|
+| Hover (web) | Hierarchy-specific background (see variants) |
 | Pressed | `data-[active=true]:opacity-80` |
-| Focused | `data-[focus-visible=true]:ring-2 ring-ring` |
-| Disabled | `opacity-40` |
-| Loading | Spinner visible, text opacity reduced |
+| Focus visible | Outer shadow `0 0 0 4px #FF5722`, `0 0 0 6px #101010` |
+| Disabled | Secondary/tertiary label `text-neutral-400` |
+| Loading | `AppButton.Spinner` + `isLoading` (non-interactive) |
 
 ---
 
@@ -95,46 +96,47 @@
 
 ## Checkbox
 
-### Sizes
+**Source**: Pencil `app.pen` → node `Q5Ei9`.
 
-| Size | Indicator | Label Font |
-|------|-----------|-----------|
-| sm | 16×16px | `text-body-sm` |
-| md | 20×20px | `text-body` |
-| lg | 24×24px | `text-body` |
+### Layout
+
+| Element | Value |
+|---------|--------|
+| Indicator | 16×16 (`h-4 w-4`), `rounded-full`, `border-neutral-500` |
+| Checked | Inset dot `shadow-[inset_0_0_0_4px_#FF5722]` |
+| Label | `font-sans-medium text-body text-neutral-300` |
+| Row gap | `gap-2` |
 
 ### States
 
-| State | Indicator Visual |
-|-------|-----------------|
-| Unchecked | `bg-transparent border-2 border-input` |
-| Checked | `bg-primary border-primary` |
-| Indeterminate | `bg-primary border-primary` (dash icon) |
-| Focused | `ring-2 ring-ring` |
-| Disabled | `opacity-40` |
-| Invalid | `border-destructive` |
+| State | Indicator visual |
+|-------|------------------|
+| Unchecked | Border ring only |
+| Checked | Border + orange inset dot |
+| Focus | `bg-neutral-900` + orange/dark outer shadow |
+| Disabled | Root `opacity-50` |
 
 ---
 
 ## Avatar
 
-### Sizes
+**Source**: Pencil `app.pen` → node `M8Qbp`.
 
-| Size | Dimensions | Fallback Font |
-|------|-----------|--------------|
-| xs | 24×24px (`w-6 h-6`) | `text-caption` |
-| sm | 32×32px (`w-8 h-8`) | `text-caption` |
-| md | 40×40px (`w-10 h-10`) | `text-body-sm` |
-| lg | 48×48px (`w-12 h-12`) | `text-body` |
-| xl | 64×64px (`w-16 h-16`) | `text-body` |
-| 2xl | 80×80px (`w-20 h-20`) | `text-heading-sm` |
+### Layout
 
-### Appearance
+| Property | Value |
+|----------|--------|
+| Size | 48×48 (`h-12 w-12`) |
+| Shape | `rounded-full` |
+| Fallback text | `font-sans-medium text-body text-neutral-300` |
 
-- Shape: `rounded-full`
-- Fallback background: `bg-muted`
-- Fallback text: `text-muted-foreground`
-- Badge: `bg-success rounded-full` (online indicator)
+### States
+
+| State | Background | Border |
+|-------|------------|--------|
+| Default | `bg-neutral-700` | `border-neutral-500` |
+| Hover | `bg-neutral-600` | `border-neutral-400` |
+| Focus visible | Default bg + orange/dark shadow ring | — |
 
 ---
 

@@ -11,7 +11,7 @@ Constituição do projeto (produto, UX, UI, conteúdo, mobile-first, a11y, perfo
 
 ### User Story 1 - Developer Uses Base Action Components (Priority: P1)
 
-A developer building any feature screen needs to trigger user actions (confirm, cancel, submit, navigate). They use the shared Button component with different visual variants (primary, secondary, outline, destructive) and sizes to match the design system, ensuring every interactive action across the app looks and behaves consistently.
+A developer building any feature screen needs to trigger user actions (confirm, cancel, submit, navigate). They use the shared Button component with Pencil-aligned variants (`primary`, `secondary`, `tertiary`) and a single layout preset, ensuring every interactive action across the app looks and behaves consistently.
 
 **Why this priority**: Buttons are the most fundamental interactive element. Every future feature (goals, deposits, settings) requires action triggers. Without a consistent Button, visual and behavioral fragmentation starts immediately.
 
@@ -123,7 +123,7 @@ A developer needs to present critical confirmations (delete a goal, confirm a la
 
 ### Functional Requirements
 
-- **FR-001**: The system MUST provide a Button component supporting at least four visual variants (primary, secondary, outline, destructive) and at least three sizes (small, medium, large).
+- **FR-001**: The system MUST provide a Button component supporting the three Pencil hierarchies (`primary`, `secondary`, `tertiary`), default/hover/focus/disabled/loading states, and label text via `children` (string) or optional `AppButton.Text`.
 - **FR-002**: The Button component MUST support loading and disabled states with distinct visual and behavioral representations.
 - **FR-003**: The system MUST provide an Input component supporting text entry with labels, placeholders, helper text, error messages, and required-field indicators.
 - **FR-004**: The Input component MUST support states: default, focused, error, disabled, and read-only, with visually distinct presentations for each.

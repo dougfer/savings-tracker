@@ -1,25 +1,55 @@
-import { Menu, MenuItem, MenuItemLabel } from '@gluestack-ui/themed';
 import React, {
   createContext,
-  type ComponentProps,
   type ReactElement,
   type ReactNode,
 } from 'react';
-import { View } from 'react-native';
+
+import { Pressable, Text, View, type PressableProps, type TextProps, type ViewProps } from 'react-native';
+
+import { createMenu } from '@gluestack-ui/core/menu/creator';
+import { cssInterop } from 'nativewind';
+
+// ---------------------------------------------------------------------------
+// Headless UI primitive via v3 creator
+// ---------------------------------------------------------------------------
+
+const UIMenu = createMenu({
+  Root: View,
+  Item: Pressable,
+  Label: Text,
+  Backdrop: Pressable,
+  Separator: View,
+});
+
+cssInterop(UIMenu, { className: 'style' } as any);
+cssInterop(UIMenu.ItemLabel, { className: 'style' } as any);
+
+// ---------------------------------------------------------------------------
+// Context (no meaningful shared state yet; reserved for future extensions)
+// ---------------------------------------------------------------------------
 
 const AppDropdownMenuContext = createContext<Record<string, never> | null>(null);
 
-type TriggerRenderFn = (triggerProps: Record<string, unknown>) => ReactElement;
+// ---------------------------------------------------------------------------
+// Compound components
+// ---------------------------------------------------------------------------
 
-type AppDropdownMenuRootProps = Omit<ComponentProps<typeof Menu>, 'trigger' | 'children'> & {
+type TriggerRenderFn = (
+  triggerProps: Record<string, unknown>,
+  state: { open: boolean },
+) => ReactElement;
+
+type AppDropdownMenuRootProps = {
+  placement?: 'top' | 'bottom' | 'left' | 'right' | 'bottom left' | 'bottom right';
+  offset?: number;
+  crossOffset?: number;
+  onOpen?: () => void;
+  onClose?: () => void;
+  closeOnSelect?: boolean;
   className?: string;
   children: ReactNode;
 };
 
-/**
- * Extracts `AppDropdownMenu.Trigger` from children and passes its render function
- * to Gluestack `Menu`'s `trigger` prop. Non-trigger children are passed as menu items.
- */
 function AppDropdownMenuRoot({ children, className, ...props }: AppDropdownMenuRootProps) {
   let triggerFn: TriggerRenderFn | null = null;
   const menuChildren: ReactNode[] = [];
@@ -35,39 +65,23 @@ function AppDropdownMenuRoot({ children, className, ...props }: AppDropdownMenuR
 
   return (
     <AppDropdownMenuContext.Provider value={{}}>
-      <Menu
-        {...props}
+      <UIMenu
+        {...(props as any)}
         trigger={triggerFn ?? (() => <View />)}
-        className={['bg-card border border-border rounded-xl shadow-md py-1', className]
+        className={['rounded-xl border border-border bg-card py-1 shadow-md', className]
           .filter(Boolean)
           .join(' ')}
       >
         {menuChildren}
-      </Menu>
+      </UIMenu>
     </AppDropdownMenuContext.Provider>
   );
 }
 
-/**
- * Marker component — its `children` render function is extracted by `AppDropdownMenuRoot`
- * and passed to Gluestack Menu's trigger prop.
- *
- * Usage:
- * ```tsx
- * <AppDropdownMenu.Trigger>
- *   {(triggerProps) => <AppButton {...triggerProps}><AppButton.Text>Open</AppButton.Text></AppButton>}
- * </AppDropdownMenu.Trigger>
- * ```
- */
 function AppDropdownMenuTrigger(_props: { children: TriggerRenderFn }) {
-  // Consumed by AppDropdownMenuRoot via React.Children — never renders directly
   return null;
 }
 
-/**
- * Transparent wrapper so items can be grouped under a semantic Content node.
- * Renders a React Fragment so Gluestack Menu sees items directly.
- */
 function AppDropdownMenuContent({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
@@ -75,22 +89,20 @@ function AppDropdownMenuContent({ children }: { children: ReactNode }) {
 function AppDropdownMenuItem({
   className,
   children,
+  textValue,
   ...props
-}: ComponentProps<typeof MenuItem>) {
+}: PressableProps & { className?: string; textValue?: string; key?: string }) {
   const cls = ['flex-row items-center gap-2 px-3 py-2.5', className].filter(Boolean).join(' ');
   return (
-    <MenuItem {...props} className={cls}>
+    <UIMenu.Item {...(props as any)} textValue={textValue} className={cls}>
       {children}
-    </MenuItem>
+    </UIMenu.Item>
   );
 }
 
-function AppDropdownMenuItemLabel({
-  className,
-  ...props
-}: ComponentProps<typeof MenuItemLabel>) {
+function AppDropdownMenuItemLabel({ className, ...props }: TextProps & { className?: string }) {
   const cls = ['text-body text-foreground', className].filter(Boolean).join(' ');
-  return <MenuItemLabel {...props} className={cls} />;
+  return <UIMenu.ItemLabel {...(props as any)} className={cls} />;
 }
 
 type AppDropdownMenuItemIconProps = {
@@ -100,25 +112,24 @@ type AppDropdownMenuItemIconProps = {
 
 function AppDropdownMenuItemIcon({ as: AsIcon, className }: AppDropdownMenuItemIconProps) {
   if (!AsIcon) return null;
-  return <AsIcon size={16} className={['text-muted-foreground', className].filter(Boolean).join(' ')} />;
+  return (
+    <AsIcon size={16} className={['text-muted-foreground', className].filter(Boolean).join(' ')} />
+  );
 }
 
-function AppDropdownMenuSeparator({ className, ...props }: ComponentProps<typeof View>) {
+function AppDropdownMenuSeparator({ className, ...props }: ViewProps & { className?: string }) {
   return (
-    <View
-      {...props}
-      className={['border-b border-border my-1 mx-1', className].filter(Boolean).join(' ')}
+    <UIMenu.Separator
+      {...(props as any)}
+      className={['mx-1 my-1 border-b border-border', className].filter(Boolean).join(' ')}
       accessibilityRole="separator"
     />
   );
 }
 
-// Copy react-stately collection node builders so Gluestack Menu can process our wrappers
-type WithCollectionNode = { getCollectionNode?: unknown };
-const MenuItemStatic = MenuItem as typeof MenuItem & WithCollectionNode;
-if (MenuItemStatic.getCollectionNode) {
-  (AppDropdownMenuItem as WithCollectionNode).getCollectionNode = MenuItemStatic.getCollectionNode;
-}
+// ---------------------------------------------------------------------------
+// Display names & compound export
+// ---------------------------------------------------------------------------
 
 AppDropdownMenuRoot.displayName = 'AppDropdownMenu';
 AppDropdownMenuTrigger.displayName = 'AppDropdownMenu.Trigger';

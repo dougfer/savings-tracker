@@ -1,1 +1,6 @@
-export { AppButton } from './app-button';
+export {
+  AppButton,
+  appButtonRootVariants,
+  appButtonTextVariants,
+  type ButtonVariant,
+} from './app-button';

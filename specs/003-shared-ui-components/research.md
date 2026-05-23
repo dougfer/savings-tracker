@@ -37,12 +37,11 @@ Building from scratch would duplicate existing accessibility, keyboard support, 
 ```
 AppButton = Object.assign(AppButtonRoot, {
   Text: AppButtonText,
-  Icon: AppButtonIcon,
   Spinner: AppButtonSpinner,
 });
 ```
 
-Consumers use: `<AppButton variant="primary" size="md"><AppButton.Text>Save</AppButton.Text></AppButton>`
+Consumers use: `<AppButton variant="primary">Save</AppButton>` (string children) or compose icons in `children`. Variants: `primary` | `secondary` | `tertiary` (Pencil `UpBXR`).
 
 **Alternatives considered:**
 - Flat prop API (`<AppButton label="Save" icon={...} />`) — rejected: violates composition-over-configuration rule

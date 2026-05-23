@@ -1,1 +1,6 @@
-export { AppCheckbox } from './app-checkbox';
+export {
+  AppCheckbox,
+  appCheckboxRootVariants,
+  appCheckboxIndicatorVariants,
+  appCheckboxLabelClassName,
+} from './app-checkbox';

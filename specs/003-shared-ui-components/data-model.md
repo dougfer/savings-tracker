@@ -6,45 +6,54 @@ All visual values (colors, spacing, radius, typography) reference tokens from `t
 
 ## 1. AppButton
 
+**Design source**: Pencil `app.pen` node `UpBXR` (Button — Primary / Secondary / Tertiary hierarchies).
+
 ### Props (Root)
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'destructive'` | `'primary'` | Visual style variant |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size preset |
-| `isDisabled` | `boolean` | `false` | Disables interaction and mutes visuals |
+| `variant` | `'primary' \| 'secondary' \| 'tertiary'` | `'primary'` | Visual hierarchy from Pencil |
+| `isDisabled` | `boolean` | `false` | Disables interaction; secondary/tertiary mute label to `neutral-400` |
 | `isLoading` | `boolean` | `false` | Shows spinner, disables interaction |
 | `onPress` | `() => void` | — | Press handler |
 | `className` | `string?` | — | Additional NativeWind classes |
-| `children` | `ReactNode` | — | Compound subparts |
+| `children` | `ReactNode` | — | Label string/number and/or compound subparts (icons as `children`, not a dedicated slot) |
 
-### Compound Subparts
+### Children
 
-| Subpart | Base Primitive | Purpose |
-|---------|----------------|---------|
-| `AppButton.Text` | Gluestack `ButtonText` | Button label text |
-| `AppButton.Icon` | Gluestack `ButtonIcon` | Leading or trailing icon |
-| `AppButton.Spinner` | Gluestack `ButtonSpinner` | Loading indicator |
+- **String or number** — wrapped automatically in styled label text (preferred: `<AppButton>Save</AppButton>`).
+- **Custom layout** — pass icons/elements as `children`; bare text nodes in the tree are auto-wrapped.
+- **`AppButton.Text`** — optional explicit label (same styles as auto-wrapped text).
+- **`AppButton.Spinner`** — loading indicator when `isLoading` is true.
+
+### Layout (single size from Pencil)
+
+| Property | Value |
+|----------|--------|
+| Min height | `48px` (`min-h-[48px]`) |
+| Padding | `py-3` (12px); `px-5` primary/secondary, `px-4` tertiary |
+| Gap | `gap-2.5` (10px) |
+| Radius | `rounded-full` |
+| Typography | `font-sans-medium text-body` (16px / 500) |
 
 ### States
 
 | State | Visual | Behavioral |
 |-------|--------|------------|
 | Default | Variant-specific bg/text/border | Interactive |
-| Hover (web) | Slightly darker bg | Interactive |
-| Pressed | Darker bg | Interactive |
-| Focused | Ring indicator | Interactive |
-| Disabled | Muted opacity | Non-interactive, announced |
-| Loading | Spinner visible, text optional | Non-interactive, busy announced |
+| Hover (web) | Hierarchy-specific bg (e.g. primary → `bg-primary`) | Interactive |
+| Pressed | `data-[active=true]:opacity-80` | Interactive |
+| Focus visible | Orange + dark outer shadow (`#FF5722` / `#101010`) | Interactive |
+| Disabled | Secondary/tertiary: `text-neutral-400` | Non-interactive |
+| Loading | Spinner visible | Non-interactive |
 
-### Token Mapping (to be finalized after Figma extraction)
+### Token mapping (Pencil → NativeWind)
 
-| Variant | Background | Text | Border |
-|---------|------------|------|--------|
-| primary | `bg-primary` | `text-primary-foreground` | — |
-| secondary | `bg-secondary` | `text-secondary-foreground` | — |
-| outline | `bg-transparent` | `text-foreground` | `border border-border` |
-| destructive | `bg-destructive` | `text-destructive-foreground` | — |
+| Variant | Background | Text | Border / notes |
+|---------|------------|------|----------------|
+| primary | `bg-orange-400`, hover `bg-primary` | `text-neutral-900` | — |
+| secondary | `bg-neutral-800`, hover `bg-neutral-700` | `text-neutral-0`, disabled `text-neutral-400` | `border-secondary` |
+| tertiary | transparent, hover `bg-neutral-800`, focus `bg-neutral-900` | `text-neutral-0`, disabled `text-neutral-400` | — |
 
 ---
 
@@ -89,6 +98,8 @@ All visual values (colors, spacing, radius, typography) reference tokens from `t
 
 ## 3. AppCheckbox
 
+**Design source**: Pencil `app.pen` node `Q5Ei9` (`_Checkbox base`).
+
 ### Props (Root)
 
 | Prop | Type | Default | Description |
@@ -97,57 +108,81 @@ All visual values (colors, spacing, radius, typography) reference tokens from `t
 | `isChecked` | `boolean` | `false` | Controlled checked state |
 | `defaultIsChecked` | `boolean` | `false` | Uncontrolled initial state |
 | `onChange` | `(checked: boolean) => void` | — | Change handler |
-| `isDisabled` | `boolean` | `false` | Disables interaction |
-| `isInvalid` | `boolean` | `false` | Error state |
-| `isIndeterminate` | `boolean` | `false` | Indeterminate visual |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size preset |
+| `isDisabled` | `boolean` | `false` | Disables interaction (`opacity-50`) |
+| `isInvalid` | `boolean` | `false` | Passed to Gluestack (no Pencil visual) |
+| `isIndeterminate` | `boolean` | `false` | Passed to Gluestack (no Pencil visual) |
+| `isReadOnly` | `boolean` | `false` | Passed to Gluestack |
 | `className` | `string?` | — | Additional NativeWind classes |
-| `children` | `ReactNode` | — | Compound subparts |
+| `children` | `ReactNode` | — | `Indicator` + `Label` |
 
 ### Compound Subparts
 
-| Subpart | Base Primitive | Purpose |
-|---------|----------------|---------|
-| `AppCheckbox.Indicator` | Gluestack `CheckboxIndicator` | The check box visual |
-| `AppCheckbox.Icon` | Gluestack `CheckboxIcon` | Check mark icon |
-| `AppCheckbox.Label` | Gluestack `CheckboxLabel` | Associated label text |
+| Subpart | Purpose |
+|---------|---------|
+| `AppCheckbox.Indicator` | 16×16 circle; orange inset dot when checked (no separate icon slot) |
+| `AppCheckbox.Label` | Associated label (`text-neutral-300`) |
 
-### States
+### Layout
 
-| State | Visual | Behavioral |
-|-------|--------|------------|
-| Unchecked | Empty indicator, border visible | Interactive |
-| Checked | Filled indicator with check icon | Interactive |
-| Indeterminate | Dash/minus icon | Interactive |
-| Focused | Ring indicator on indicator | Interactive |
-| Disabled | Muted opacity | Non-interactive |
-| Invalid | Error border color | Interactive |
+| Element | Value |
+|---------|--------|
+| Indicator | `h-4 w-4`, `rounded-full`, `border-neutral-500` |
+| Checked mark | Inset shadow `#FF5722` (8px dot) |
+| Root gap | `gap-2` (8px) |
+| Label | `font-sans-medium text-body text-neutral-300` |
+
+### States (Pencil)
+
+| State | Indicator visual |
+|-------|------------------|
+| Default, unchecked | Border only |
+| Default / Hover, checked | Border + orange inset dot |
+| Focus | `bg-neutral-900` + ring (`native:` border / `web:` shadow) |
+| Disabled | Root `opacity-50`, non-interactive |
 
 ---
 
 ## 4. AppAvatar
 
+**Design source**: Pencil `app.pen` node `M8Qbp` (48×48, Default / Hover / Focus).
+
 ### Props (Root)
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| '2xl'` | `'md'` | Size preset |
 | `className` | `string?` | — | Additional NativeWind classes |
-| `children` | `ReactNode` | — | Compound subparts |
+| `children` | `ReactNode` | — | `FallbackText` + optional `Image` |
+| `accessibilityLabel` | `string?` | — | Spoken label for the avatar |
+| `onPress` | `PressableProps['onPress']` | — | Optional; enables focus/hover when used as trigger |
+| `disabled` | `boolean` | `false` | Disables interaction |
 
 ### Compound Subparts
 
 | Subpart | Base Primitive | Purpose |
 |---------|----------------|---------|
-| `AppAvatar.Image` | Gluestack `AvatarImage` | User profile image |
-| `AppAvatar.FallbackText` | Gluestack `AvatarFallbackText` | Initials when no image |
-| `AppAvatar.Badge` | Gluestack `AvatarBadge` | Status indicator |
+| `AppAvatar.Image` | `Image` | Profile photo; hides fallback on successful load |
+| `AppAvatar.FallbackText` | `Text` | Initials when no image or load error |
+
+### Layout (single size from Pencil)
+
+| Property | Value |
+|----------|--------|
+| Size | 48×48 (`h-12 w-12`) |
+| Shape | `rounded-full` |
+| Fallback typography | `font-sans-medium text-body text-neutral-300` |
+
+### States
+
+| State | Visual |
+|-------|--------|
+| Default | `bg-neutral-700`, `border-neutral-500` |
+| Hover (web) | `bg-neutral-600`, `border-neutral-400` |
+| Focus visible | Orange + dark outer shadow (same as Button) |
 
 ### Behavior
 
-- When `AppAvatar.Image` source fails to load → falls back to `AppAvatar.FallbackText`
-- `AppAvatar.FallbackText` receives full name; Gluestack extracts initials automatically
-- Place `FallbackText` before `Image` in JSX for iOS compatibility (Gluestack recommendation)
+- Place `FallbackText` before `Image` in JSX (fallback renders under the photo).
+- `AppAvatar.Image` `onError` → shows `FallbackText` again.
 
 ---
 

@@ -29,8 +29,9 @@ Use this rule as the source of truth for technical decisions and compatibility. 
 
 ## UI, Design System, and Styling
 
-- Component library: `@gluestack-ui/themed@^1.1.73`, `@gluestack-ui/config@^1.1.20`
-- Styling bridge: `nativewind@^4.2.0` with `tailwindcss@^3.4.17` (dev)
+- Component library: `@gluestack-ui/core@^3.0.20` + `@gluestack-ui/utils@^3.0.21` (v3). Use **creator functions** (`createInput`, `createButton`, `createCheckbox`, `createModal`, `createMenu`) from `@gluestack-ui/core/<component>/creator` to build headless UI primitives with automatic state management via `states` + `dataSet` props. Simple components (AppText, AppAvatar, AppProgressBar, AppScreen) use pure React Native primitives. No global provider or config needed — each component registers `cssInterop` locally.
+- Styling bridge: `nativewind@^4.2.4` with `tailwindcss@^3.4.19` (dev, v3-LTS line). **Do NOT upgrade to Tailwind v4** — NativeWind v4 is only compatible with Tailwind v3. NativeWind v5 (preview) would support Tailwind v4 but is not stable.
+- State-driven styling: use `data-[focus=true]:`, `data-[disabled=true]:`, `data-[invalid=true]:`, `data-[active=true]:`, `data-[checked=true]:` in NativeWind `className`. On native, these are resolved by the `withStates` HOC (`src/lib/gluestack/with-states-interop.tsx`); on web, CSS attribute selectors match the `dataSet` attributes set by the creators.
 - SVG / motion: `react-native-svg@15.12.1`, `@legendapp/motion@^2.4.0`
 
 ## Forms, Validation, and State
@@ -51,16 +52,16 @@ Use this rule as the source of truth for technical decisions and compatibility. 
 
 - Lint/format: `eslint@^9.17.0`, `eslint-config-expo@~10.0.0`, `prettier@^3.4.2`
 - Tests: `jest@^29.7.0`, `jest-expo@~54.0.0`, `@testing-library/react-native@^13.2.0`, `@types/jest@^30.0.0`, `react-test-renderer@19.1.0`
-- Build tooling: `@babel/core@^7.26.0`, `babel-plugin-module-resolver@^5.0.3` (path alias `@` → `./src`)
+- Build tooling: `@babel/core@^7.26.0`, `babel-plugin-module-resolver@^5.0.3` (path alias `@` → `./src`), `react-native-svg-transformer@^1.5.3`
 
 ## Best Practices for These Versions
 
 1. Keep **Expo SDK 54** family packages on the `~` lines suggested by Expo (`expo install`) to avoid native mismatch between JS and prebuilds.
 2. In **React 19**, prefer function components and explicit typing for props and hooks; avoid `any` and treat `useEffect` as synchronization with external systems, not a default for derived state.
 3. In **TypeScript 5.9**, lean on strict typing and **Expo Router typed routes** for navigation params where generated types exist.
-4. **NativeWind 4 + Tailwind 3**: share tokens and utility patterns via the project Tailwind/Gluestack setup; avoid duplicating ad-hoc style objects when utilities already exist.
+4. **NativeWind 4 + Tailwind 3**: share tokens and utility patterns via the project Tailwind/Gluestack setup; avoid duplicating ad-hoc style objects when utilities already exist. **Never install Tailwind v4** (it requires NativeWind v5 which is still preview).
 5. **Reanimated**: keep `react-native-reanimated/plugin` **last** in `babel.config.js` plugins; verify worklets/Reanimated APIs against the installed minor.
-6. **Gluestack + RN**: favor accessible primitives from the design system; respect baseline a11y contracts under `specs/001-project-foundation/contracts/` when building UI.
+6. **Gluestack v3 + NativeWind**: use `@gluestack-ui/core` creators for interactive components (Input, Button, Checkbox, Modal, Menu) — they manage focus, hover, disabled, and checked states automatically via `states`/`dataSet` props. Wrap the Root primitive with `withStates()` from `src/lib/gluestack/with-states-interop.tsx` so `data-[xxx=true]:` classes resolve on native. Style **exclusively via NativeWind `className`**. Simple display components (Text, Avatar, ProgressBar, Screen) use pure RN primitives without creators. Respect baseline a11y contracts under `specs/001-project-foundation/contracts/`.
 7. **Jest + jest-expo + RNTL**: test behavior users see (labels, roles, navigation outcomes), not implementation details; keep `babel.config.js` test path consistent (e.g. NativeWind preset disabled under test if that is the project convention).
 8. When adding dependencies, pick the latest **stable** release compatible with **Expo SDK 54** and **RN 0.81**; run `npx expo install <pkg>` for Expo-first packages.
 9. Before opening a PR, run `npm run lint` and `npm run test`.

@@ -12,9 +12,9 @@ Stack context: React 19 + React Native + Gluestack UI + NativeWind (details and 
 
 ## UI primitives and styling
 
-- **Gluestack UI** — Prefer `@gluestack-ui/themed` primitives (and re-exports under `@/components/ui`) when building shared design-system UI; **not mandatory** for every line of markup (e.g. layout-only `Box`/`Text` is still Gluestack-friendly).
-- **React Native** — Use core `react-native` primitives (`View`, `Text`, `Pressable`, …) when they are the clearer or lighter choice (accessibility, bridges, or gaps Gluestack does not cover).
-- **NativeWind** — Use `className` + Tailwind tokens for layout/spacing/visual utilities where the project NativeWind setup applies; keep token usage consistent with existing screens/components.
+- **Gluestack UI v3** — For interactive components (Button, Input, Checkbox, Modal, Menu), use creator functions from `@gluestack-ui/core/<component>/creator` to get headless primitives with automatic state management (`states`/`dataSet` props) + a11y. Wrap the Root with `withStates()` from `@/lib/gluestack/with-states-interop` and register each subpart with `cssInterop` from `nativewind`.
+- **React Native** — For simple display components (Text, Avatar, ProgressBar, Screen), use core `react-native` primitives (`View`, `Text`, `Pressable`, `Image`, …) directly.
+- **NativeWind** — Use `className` + Tailwind tokens for all styling; use `data-[xxx=true]:` classes for state-driven styles (focus, disabled, invalid, active, checked). Keep token usage consistent with existing screens/components.
 - **Source of truth** — Do not duplicate the full dependency matrix here; extend `project-stack-versions.mdc` when the stack changes.
 
 ## Filenames
@@ -47,7 +47,7 @@ import { AppPanelInnerRow } from '@/components/layout/AppPanel';
 
 ```tsx
 // ✅ GOOD — namespace + composition (pattern only; names illustrative)
-import { Box } from '@gluestack-ui/themed';
+import { View } from 'react-native';
 import { createContext, useContext, type ReactNode } from 'react';
 
 type PanelCtx = { variant: 'default' | 'compact' };
@@ -62,19 +62,19 @@ function usePanel() {
 function PanelRoot({ children, variant = 'default' }: { children: ReactNode; variant?: PanelCtx['variant'] }) {
   return (
     <PanelContext.Provider value={{ variant }}>
-      <Box>{children}</Box>
+      <View>{children}</View>
     </PanelContext.Provider>
   );
 }
 
 function PanelHeader({ children }: { children: ReactNode }) {
   usePanel();
-  return <Box>{children}</Box>;
+  return <View>{children}</View>;
 }
 
 function PanelBody({ children }: { children: ReactNode }) {
   usePanel();
-  return <Box flex={1}>{children}</Box>;
+  return <View className="flex-1">{children}</View>;
 }
 
 PanelRoot.displayName = 'Panel';

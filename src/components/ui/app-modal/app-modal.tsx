@@ -1,13 +1,35 @@
-import {
-  Modal,
-  ModalBackdrop,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from '@gluestack-ui/themed';
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+import { createContext, useContext, type ReactNode } from 'react';
+
+import { Pressable, View, type PressableProps, type ViewProps } from 'react-native';
+
+import { createModal } from '@gluestack-ui/core/modal/creator';
+import { cssInterop } from 'nativewind';
+
+// ---------------------------------------------------------------------------
+// Headless UI primitive via v3 creator
+// ---------------------------------------------------------------------------
+
+const UIModal = createModal({
+  Root: View,
+  Content: View,
+  CloseButton: Pressable,
+  Header: View,
+  Footer: View,
+  Body: View,
+  Backdrop: Pressable,
+});
+
+cssInterop(UIModal, { className: 'style' } as any);
+cssInterop(UIModal.Content, { className: 'style' } as any);
+cssInterop(UIModal.Backdrop, { className: 'style' } as any);
+cssInterop(UIModal.CloseButton, { className: 'style' } as any);
+cssInterop(UIModal.Header, { className: 'style' } as any);
+cssInterop(UIModal.Body, { className: 'style' } as any);
+cssInterop(UIModal.Footer, { className: 'style' } as any);
+
+// ---------------------------------------------------------------------------
+// Variant / size maps
+// ---------------------------------------------------------------------------
 
 type ModalSize = 'sm' | 'md' | 'lg' | 'full';
 
@@ -29,61 +51,70 @@ const sizeContentCls: Record<ModalSize, string> = {
   full: 'w-full h-full rounded-none mx-0',
 };
 
-type AppModalRootProps = Omit<ComponentProps<typeof Modal>, 'size'> & {
+// ---------------------------------------------------------------------------
+// Compound components
+// ---------------------------------------------------------------------------
+
+type AppModalRootProps = {
+  isOpen: boolean;
+  onClose: () => void;
   size?: ModalSize;
+  closeOnOverlayClick?: boolean;
+  isKeyboardDismissable?: boolean;
+  avoidKeyboard?: boolean;
+  useRNModal?: boolean;
+  initialFocusRef?: React.RefObject<any>;
+  finalFocusRef?: React.RefObject<any>;
   className?: string;
   children?: ReactNode;
 };
 
 function AppModalRoot({ size = 'md', className, children, ...props }: AppModalRootProps) {
   return (
-    <Modal {...props} className={className}>
-      {/* Provider is inside Modal so context is accessible through Gluestack's portal */}
-      <AppModalContext.Provider value={{ size }}>
-        {children}
-      </AppModalContext.Provider>
-    </Modal>
+    <UIModal {...(props as any)} className={className}>
+      <AppModalContext.Provider value={{ size }}>{children}</AppModalContext.Provider>
+    </UIModal>
   );
 }
 
-function AppModalBackdrop({ className, ...props }: ComponentProps<typeof ModalBackdrop>) {
+function AppModalBackdrop({ className, ...props }: PressableProps & { className?: string }) {
   const cls = ['bg-black/50', className].filter(Boolean).join(' ');
-  return <ModalBackdrop {...props} className={cls} />;
+  return <UIModal.Backdrop {...(props as any)} className={cls} />;
 }
 
-function AppModalContent({ className, ...props }: ComponentProps<typeof ModalContent>) {
+function AppModalContent({ className, ...props }: ViewProps & { className?: string }) {
   const { size } = useAppModalCtx();
-  const cls = [
-    'bg-card border border-border rounded-2xl mx-4',
-    sizeContentCls[size],
-    className,
-  ]
+  const cls = ['bg-card border border-border rounded-2xl mx-4', sizeContentCls[size], className]
     .filter(Boolean)
     .join(' ');
-  return <ModalContent {...props} className={cls} />;
+  return <UIModal.Content {...(props as any)} className={cls} />;
 }
 
-function AppModalHeader({ className, ...props }: ComponentProps<typeof ModalHeader>) {
+function AppModalHeader({ className, ...props }: ViewProps & { className?: string }) {
   const cls = ['px-6 pt-6 pb-4 flex-row items-center justify-between', className]
     .filter(Boolean)
     .join(' ');
-  return <ModalHeader {...props} className={cls} />;
+  return <UIModal.Header {...(props as any)} className={cls} />;
 }
 
-function AppModalBody({ className, ...props }: ComponentProps<typeof ModalBody>) {
+function AppModalBody({ className, ...props }: ViewProps & { className?: string }) {
   const cls = ['px-6 pb-4', className].filter(Boolean).join(' ');
-  return <ModalBody {...props} className={cls} />;
+  return <UIModal.Body {...(props as any)} className={cls} />;
 }
 
-function AppModalFooter({ className, ...props }: ComponentProps<typeof ModalFooter>) {
+function AppModalFooter({ className, ...props }: ViewProps & { className?: string }) {
   const cls = ['px-6 pb-6 flex-row gap-3', className].filter(Boolean).join(' ');
-  return <ModalFooter {...props} className={cls} />;
+  return <UIModal.Footer {...(props as any)} className={cls} />;
 }
 
-function AppModalCloseButton({ className, ...props }: ComponentProps<typeof ModalCloseButton>) {
+function AppModalCloseButton({ className, ...props }: PressableProps & { className?: string }) {
   const cls = ['p-2 rounded-full data-[hover=true]:bg-muted', className].filter(Boolean).join(' ');
-  return <ModalCloseButton {...props} className={cls} />;
+  return <UIModal.CloseButton {...(props as any)} className={cls} />;
 }
+
+// ---------------------------------------------------------------------------
+// Display names & compound export
+// ---------------------------------------------------------------------------
 
 AppModalRoot.displayName = 'AppModal';
 AppModalBackdrop.displayName = 'AppModal.Backdrop';

@@ -1,9 +1,64 @@
-import { Avatar, AvatarBadge, AvatarFallbackText, AvatarImage } from '@gluestack-ui/themed';
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+/**
+ * AppAvatar — Pencil `app.pen` node M8Qbp. Single 48×48 layout; subparts: `Image`, `FallbackText`.
+ *
+ * @example
+ * <AppAvatar accessibilityLabel="Jane Smith">
+ *   <AppAvatar.FallbackText>AH</AppAvatar.FallbackText>
+ *   <AppAvatar.Image source={{ uri: profileImageUrl }} />
+ * </AppAvatar>
+ *
+ * Focus ring uses `native:`/`web:` utilities for iOS, Android, and web.
+ *
+ * @see specs/003-shared-ui-components/quickstart.md — Avatar
+ */
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  type ComponentProps,
+  type ReactNode,
+} from 'react';
 
-type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+import {
+  Image,
+  Pressable,
+  Text,
+  type ImageProps,
+  type PressableProps,
+  type TextProps,
+} from 'react-native';
 
-type AppAvatarCtx = { size: AvatarSize };
+import { useFocus, useFocusRing, useHover } from '@gluestack-ui/utils/aria';
+import { composeEventHandlers } from '@gluestack-ui/utils/common';
+import { tva } from '@gluestack-ui/utils/nativewind-utils';
+
+import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
+import { withStates } from '@/lib/gluestack/with-states-interop';
+
+// ---------------------------------------------------------------------------
+// Variants — Pencil node M8Qbp (Default / Hover / Focus)
+// ---------------------------------------------------------------------------
+
+export const appAvatarRootVariants = tva({
+  base: [
+    'relative h-12 w-12 shrink-0 overflow-hidden rounded-full',
+    'items-center justify-center',
+    'border border-neutral-500 bg-neutral-700',
+    'data-[hover=true]:border-neutral-400 data-[hover=true]:bg-neutral-600',
+    pencilFocusRingClasses,
+  ].join(' '),
+});
+
+/** Fallback label styles (Pencil M8Qbp). */
+export const appAvatarFallbackTextClassName = 'font-sans-medium text-body text-neutral-300';
+
+const StyledRoot = withStates(Pressable);
+
+type AppAvatarCtx = {
+  imageVisible: boolean;
+  setImageVisible: (visible: boolean) => void;
+};
 
 const AppAvatarContext = createContext<AppAvatarCtx | null>(null);
 
@@ -13,72 +68,133 @@ function useAppAvatarCtx(): AppAvatarCtx {
   return ctx;
 }
 
-const sizeContainerCls: Record<AvatarSize, string> = {
-  xs: 'w-6 h-6',
-  sm: 'w-8 h-8',
-  md: 'w-10 h-10',
-  lg: 'w-12 h-12',
-  xl: 'w-16 h-16',
-  '2xl': 'w-20 h-20',
-};
+// ---------------------------------------------------------------------------
+// Compound components
+// ---------------------------------------------------------------------------
 
-const sizeFallbackTextCls: Record<AvatarSize, string> = {
-  xs: 'text-caption',
-  sm: 'text-caption',
-  md: 'text-body-sm',
-  lg: 'text-body',
-  xl: 'text-body',
-  '2xl': 'text-heading-sm',
-};
-
-type AppAvatarRootProps = Omit<ComponentProps<typeof Avatar>, 'size'> & {
-  size?: AvatarSize;
+type AppAvatarRootProps = Omit<PressableProps, 'children'> & {
   className?: string;
   children?: ReactNode;
 };
 
-function AppAvatarRoot({ size = 'md', className, children, ...props }: AppAvatarRootProps) {
-  const cls = [
-    'rounded-full bg-muted overflow-hidden items-center justify-center',
-    sizeContainerCls[size],
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+function AppAvatarRoot({
+  className,
+  children,
+  disabled,
+  onHoverIn,
+  onHoverOut,
+  onFocus,
+  onBlur,
+  ...props
+}: AppAvatarRootProps) {
+  const [imageVisible, setImageVisible] = useState(false);
+  const { isFocusVisible, focusProps: focusRingProps } = useFocusRing();
+  const { isFocused, focusProps } = useFocus();
+  const { isHovered, hoverProps } = useHover();
+  const ringFocusProps = focusRingProps as {
+    onFocus?: NonNullable<PressableProps['onFocus']>;
+    onBlur?: NonNullable<PressableProps['onBlur']>;
+  };
+
+  const ctx = useMemo(
+    () => ({ imageVisible, setImageVisible }),
+    [imageVisible],
+  );
+
+  const cls = appAvatarRootVariants({ class: className });
+  const interactive = !disabled;
+
   return (
-    <AppAvatarContext.Provider value={{ size }}>
-      <Avatar {...props} size={size} className={cls}>
+    <AppAvatarContext.Provider value={ctx}>
+      <StyledRoot
+        {...({
+          ...props,
+          disabled,
+          accessibilityRole: 'image',
+          className: cls,
+          states: {
+            hover: interactive && isHovered,
+            focus: interactive && isFocused,
+            focusVisible: interactive && isFocusVisible,
+          },
+          dataSet: {
+            hover: interactive && isHovered ? 'true' : 'false',
+            focus: interactive && isFocused ? 'true' : 'false',
+            focusVisible: interactive && isFocusVisible ? 'true' : 'false',
+          },
+          onHoverIn: composeEventHandlers(onHoverIn, hoverProps.onHoverIn),
+          onHoverOut: composeEventHandlers(onHoverOut, hoverProps.onHoverOut),
+          onFocus: composeEventHandlers(
+            composeEventHandlers(onFocus, focusProps.onFocus),
+            ringFocusProps.onFocus,
+          ),
+          onBlur: composeEventHandlers(
+            composeEventHandlers(onBlur, focusProps.onBlur),
+            ringFocusProps.onBlur,
+          ),
+        } as ComponentProps<typeof StyledRoot>)}
+      >
         {children}
-      </Avatar>
+      </StyledRoot>
     </AppAvatarContext.Provider>
   );
 }
 
-function AppAvatarImage({ className, ...props }: ComponentProps<typeof AvatarImage>) {
-  const cls = ['w-full h-full rounded-full', className].filter(Boolean).join(' ');
-  return <AvatarImage {...props} className={cls} />;
-}
+type AppAvatarImageProps = ImageProps & { className?: string };
 
-function AppAvatarFallbackText({ className, ...props }: ComponentProps<typeof AvatarFallbackText>) {
-  const { size } = useAppAvatarCtx();
-  const cls = ['text-muted-foreground font-sans-semibold', sizeFallbackTextCls[size], className]
+function AppAvatarImage({ className, onLoad, onError, source, ...props }: AppAvatarImageProps) {
+  const { setImageVisible } = useAppAvatarCtx();
+
+  if (source == null) return null;
+
+  const cls = [
+    'absolute inset-0 h-full w-full rounded-full',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
-  return <AvatarFallbackText {...props} className={cls} />;
+
+  return (
+    <Image
+      {...props}
+      source={source}
+      className={cls}
+      onLoad={(event) => {
+        setImageVisible(true);
+        onLoad?.(event);
+      }}
+      onError={(event) => {
+        setImageVisible(false);
+        onError?.(event);
+      }}
+    />
+  );
 }
 
-function AppAvatarBadge({ className, ...props }: ComponentProps<typeof AvatarBadge>) {
-  const cls = ['bg-success rounded-full', className].filter(Boolean).join(' ');
-  return <AvatarBadge {...props} className={cls} />;
+type AppAvatarFallbackTextProps = TextProps & { className?: string };
+
+function AppAvatarFallbackText({ className, ...props }: AppAvatarFallbackTextProps) {
+  const { imageVisible } = useAppAvatarCtx();
+  const cls = [
+    appAvatarFallbackTextClassName,
+    imageVisible ? 'opacity-0' : 'opacity-100',
+    className,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
+  return <Text {...props} className={cls} accessibilityElementsHidden={imageVisible} />;
 }
+
+// ---------------------------------------------------------------------------
+// Display names & compound export
+// ---------------------------------------------------------------------------
 
 AppAvatarRoot.displayName = 'AppAvatar';
 AppAvatarImage.displayName = 'AppAvatar.Image';
 AppAvatarFallbackText.displayName = 'AppAvatar.FallbackText';
-AppAvatarBadge.displayName = 'AppAvatar.Badge';
 
 export const AppAvatar = Object.assign(AppAvatarRoot, {
   Image: AppAvatarImage,
   FallbackText: AppAvatarFallbackText,
-  Badge: AppAvatarBadge,
 });

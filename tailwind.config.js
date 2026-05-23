@@ -64,73 +64,19 @@ module.exports = {
         display: ['BricolageGrotesque_600SemiBold'],
         'display-semibold': ['BricolageGrotesque_600SemiBold'],
       },
+      // Apply font via `font-*` classes (font-sans, font-sans-medium, font-display, etc.).
+      // Tailwind fontSize only supports lineHeight, letterSpacing, and fontWeight.
       fontSize: {
-        'display-lg': [
-          '64px',
-          {
-            lineHeight: '64px',
-            letterSpacing: '-2px',
-            fontFamily: 'BricolageGrotesque_600SemiBold',
-          },
-        ],
-        'display-md': [
-          '44px',
-          {
-            lineHeight: '44px',
-            letterSpacing: '-2px',
-            fontFamily: 'BricolageGrotesque_600SemiBold',
-          },
-        ],
-        'heading-lg': ['32px', { lineHeight: '38.4px', fontFamily: 'Inter_700Bold' }],
-        'heading-md': [
-          '20px',
-          {
-            lineHeight: '24px',
-            letterSpacing: '-0.3px',
-            fontFamily: 'Inter_600SemiBold',
-          },
-        ],
-        'heading-sm': [
-          '20px',
-          {
-            lineHeight: '24px',
-            letterSpacing: '-0.3px',
-            fontFamily: 'Inter_600SemiBold',
-          },
-        ],
-        body: [
-          '16px',
-          {
-            lineHeight: '24px',
-            letterSpacing: '-0.3px',
-            fontFamily: 'Inter_500Medium',
-          },
-        ],
-        'body-semibold': [
-          '16px',
-          {
-            lineHeight: '22.4px',
-            letterSpacing: '-0.3px',
-            fontFamily: 'Inter_600SemiBold',
-          },
-        ],
-        'body-sm': [
-          '14px',
-          {
-            lineHeight: '19.6px',
-            letterSpacing: '-0.3px',
-            fontFamily: 'Inter_600SemiBold',
-          },
-        ],
-        caption: ['11px', { lineHeight: '13.2px', fontFamily: 'Inter_600SemiBold' }],
-        amount: [
-          '20px',
-          {
-            lineHeight: '24px',
-            letterSpacing: '-0.3px',
-            fontFamily: 'Inter_600SemiBold',
-          },
-        ],
+        'display-lg': ['64px', { lineHeight: '64px', letterSpacing: '-2px' }],
+        'display-md': ['44px', { lineHeight: '44px', letterSpacing: '-2px' }],
+        'heading-lg': ['32px', { lineHeight: '38.4px' }],
+        'heading-md': ['20px', { lineHeight: '24px', letterSpacing: '-0.3px' }],
+        'heading-sm': ['20px', { lineHeight: '24px', letterSpacing: '-0.3px' }],
+        body: ['16px', { lineHeight: '24px', letterSpacing: '-0.3px' }],
+        'body-semibold': ['16px', { lineHeight: '22.4px', letterSpacing: '-0.3px' }],
+        'body-sm': ['14px', { lineHeight: '19.6px', letterSpacing: '-0.3px' }],
+        caption: ['11px', { lineHeight: '13.2px' }],
+        amount: ['20px', { lineHeight: '24px', letterSpacing: '-0.3px' }],
       },
       spacing: {
         px: '1px',

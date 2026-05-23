@@ -1,53 +1,159 @@
-import { Button, ButtonIcon, ButtonSpinner, ButtonText } from '@gluestack-ui/themed';
-import { createContext, useContext, type ComponentProps, type ReactNode } from 'react';
+/**
+ * AppButton — Pencil `app.pen` node UpBXR. Variants: `primary` | `secondary` | `tertiary`.
+ * Label as string `children`; optional `AppButton.Spinner` when `isLoading`.
+ * Focus ring uses `native:`/`web:` utilities for iOS, Android, and web.
+ *
+ * @example
+ * <AppButton variant="primary" onPress={handleSave}>Save Goal</AppButton>
+ *
+ * @see specs/003-shared-ui-components/quickstart.md — Button
+ */
+import { Children, isValidElement, type ReactNode } from 'react';
 
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'destructive';
-type ButtonSize = 'sm' | 'md' | 'lg';
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  View,
+  type PressableProps,
+  type TextProps,
+} from 'react-native';
 
-type AppButtonCtx = {
+import { createButton } from '@gluestack-ui/core/button/creator';
+import { tva, useStyleContext, withStyleContext } from '@gluestack-ui/utils/nativewind-utils';
+import { cssInterop } from 'nativewind';
+
+import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
+import { withStates } from '@/lib/gluestack/with-states-interop';
+
+// ---------------------------------------------------------------------------
+// Headless UI primitive via v3 creator
+// ---------------------------------------------------------------------------
+
+const BUTTON_SCOPE = 'APP_BUTTON';
+
+const StyledRoot = withStates(withStyleContext(Pressable, BUTTON_SCOPE));
+const StyledText = withStates(Text);
+const StyledGroup = withStates(View);
+const StyledSpinner = withStates(ActivityIndicator);
+const StyledIcon = withStates(View);
+
+const UIButton = createButton({
+  Root: StyledRoot,
+  Text: StyledText,
+  Group: StyledGroup,
+  Spinner: StyledSpinner,
+  Icon: StyledIcon,
+});
+
+cssInterop(UIButton, { className: 'style' } as any);
+cssInterop(UIButton.Text, { className: 'style' } as any);
+cssInterop(UIButton.Spinner, { className: 'style' } as any);
+
+// ---------------------------------------------------------------------------
+// Variants — Pencil node UpBXR (Primary / Secondary / Tertiary only)
+// ---------------------------------------------------------------------------
+
+
+export const appButtonRootVariants = tva({
+  base: [
+    'flex-row shrink-0 items-center justify-center rounded-full border border-transparent',
+    'min-h-[48px] gap-2.5 py-3',
+    'data-[disabled=true]:pointer-events-none',
+    'data-[active=true]:opacity-80',
+    '[&_svg]:pointer-events-none [&_svg]:shrink-0',
+  ].join(' '),
+  variants: {
+    variant: {
+      primary: [
+        'bg-orange-400 px-5',
+        'data-[hover=true]:bg-primary',
+        pencilFocusRingClasses,
+      ].join(' '),
+      secondary: [
+        'bg-neutral-800 border-secondary px-5',
+        'data-[hover=true]:bg-neutral-700',
+        pencilFocusRingClasses,
+      ].join(' '),
+      tertiary: [
+        'bg-transparent px-4',
+        'data-[hover=true]:bg-neutral-800',
+        'data-[focus-visible=true]:bg-neutral-900',
+        pencilFocusRingClasses,
+      ].join(' '),
+    },
+  },
+  defaultVariants: {
+    variant: 'primary',
+  },
+});
+
+export const appButtonTextVariants = tva({
+  base: 'font-sans-medium text-body',
+  variants: {
+    variant: {
+      primary: 'text-neutral-900',
+      secondary: 'text-neutral-0 data-[disabled=true]:text-neutral-400',
+      tertiary: 'text-neutral-0 data-[disabled=true]:text-neutral-400',
+    },
+  },
+  defaultVariants: {
+    variant: 'primary',
+  },
+});
+
+export type ButtonVariant = NonNullable<Parameters<typeof appButtonRootVariants>[0]>['variant'];
+
+type AppButtonStyleContext = {
   variant: ButtonVariant;
-  size: ButtonSize;
-  isDisabled: boolean;
   isLoading: boolean;
 };
 
-const AppButtonContext = createContext<AppButtonCtx | null>(null);
-
-function useAppButtonCtx(): AppButtonCtx {
-  const ctx = useContext(AppButtonContext);
-  if (!ctx) throw new Error('AppButton subcomponents must be used inside <AppButton>');
-  return ctx;
+function useAppButtonStyle(): AppButtonStyleContext {
+  const ctx = useStyleContext(BUTTON_SCOPE) as AppButtonStyleContext | undefined;
+  return (
+    ctx ?? {
+      variant: 'primary',
+      isLoading: false,
+    }
+  );
 }
 
-const rootVariantCls: Record<ButtonVariant, string> = {
-  primary: 'bg-primary',
-  secondary: 'bg-secondary',
-  outline: 'bg-transparent border border-border',
-  destructive: 'bg-destructive',
-};
+// ---------------------------------------------------------------------------
+// Children helpers
+// ---------------------------------------------------------------------------
 
-const rootSizeCls: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 min-h-[36px]',
-  md: 'px-4 py-2.5 min-h-[44px]',
-  lg: 'px-5 py-3 min-h-[52px]',
-};
+function isPrimitiveChild(child: ReactNode): child is string | number {
+  return typeof child === 'string' || typeof child === 'number';
+}
 
-const textVariantCls: Record<ButtonVariant, string> = {
-  primary: 'text-primary-foreground',
-  secondary: 'text-secondary-foreground',
-  outline: 'text-foreground',
-  destructive: 'text-destructive-foreground',
-};
+function normalizeButtonChildren(children: ReactNode): ReactNode {
+  if (children == null) return children;
 
-const textSizeCls: Record<ButtonSize, string> = {
-  sm: 'text-body-sm',
-  md: 'text-body',
-  lg: 'text-body',
-};
+  if (isPrimitiveChild(children)) {
+    return <AppButtonText>{children}</AppButtonText>;
+  }
 
-type AppButtonRootProps = Omit<ComponentProps<typeof Button>, 'size' | 'variant' | 'action'> & {
+  return Children.map(children, (child, index) => {
+    if (child == null || typeof child === 'boolean') return null;
+    if (isPrimitiveChild(child)) {
+      return (
+        <AppButtonText key={`app-button-text-${index}`}>{child}</AppButtonText>
+      );
+    }
+    if (isValidElement(child) && child.type === AppButtonText) {
+      return child;
+    }
+    return child;
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Compound components
+// ---------------------------------------------------------------------------
+
+type AppButtonRootProps = Omit<PressableProps, 'children'> & {
   variant?: ButtonVariant;
-  size?: ButtonSize;
   isDisabled?: boolean;
   isLoading?: boolean;
   className?: string;
@@ -56,7 +162,6 @@ type AppButtonRootProps = Omit<ComponentProps<typeof Button>, 'size' | 'variant'
 
 function AppButtonRoot({
   variant = 'primary',
-  size = 'md',
   isDisabled = false,
   isLoading = false,
   className,
@@ -64,53 +169,61 @@ function AppButtonRoot({
   ...props
 }: AppButtonRootProps) {
   const effectiveDisabled = isDisabled || isLoading;
-  const cls = [
-    'flex-row items-center justify-center rounded-xl',
-    rootVariantCls[variant],
-    rootSizeCls[size],
-    effectiveDisabled ? 'opacity-40' : 'data-[active=true]:opacity-80',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const cls = appButtonRootVariants({ variant, class: className });
 
   return (
-    <AppButtonContext.Provider value={{ variant, size, isDisabled: effectiveDisabled, isLoading }}>
-      <Button {...props} isDisabled={effectiveDisabled} className={cls}>
-        {children}
-      </Button>
-    </AppButtonContext.Provider>
+    <UIButton
+      {...(props as any)}
+      context={{ variant, isLoading } satisfies AppButtonStyleContext}
+      isDisabled={effectiveDisabled}
+      className={cls}
+    >
+      {normalizeButtonChildren(children)}
+    </UIButton>
   );
 }
 
-function AppButtonText({ className, ...props }: ComponentProps<typeof ButtonText>) {
-  const { variant, size } = useAppButtonCtx();
-  const cls = ['font-sans-semibold', textVariantCls[variant], textSizeCls[size], className]
-    .filter(Boolean)
-    .join(' ');
-  return <ButtonText {...props} className={cls} />;
+function AppButtonText({ className, ...props }: TextProps & { className?: string }) {
+  const { variant } = useAppButtonStyle();
+  const cls = appButtonTextVariants({ variant, class: className });
+  return <UIButton.Text {...(props as any)} className={cls} />;
 }
 
-function AppButtonIcon({ className, ...props }: ComponentProps<typeof ButtonIcon>) {
-  const { variant } = useAppButtonCtx();
-  const cls = [textVariantCls[variant], className].filter(Boolean).join(' ');
-  return <ButtonIcon {...props} className={cls} />;
+function getSpinnerColor(variant: ButtonVariant): string {
+  return variant === 'primary' ? '#101010' : '#FFFFFF';
 }
 
-function AppButtonSpinner({ className, ...props }: ComponentProps<typeof ButtonSpinner>) {
-  const { isLoading, variant } = useAppButtonCtx();
+function AppButtonSpinner({
+  className,
+  color,
+  ...props
+}: Readonly<{
+  className?: string;
+  color?: string;
+}>) {
+  const { isLoading, variant } = useAppButtonStyle();
   if (!isLoading) return null;
-  const cls = [textVariantCls[variant], className].filter(Boolean).join(' ');
-  return <ButtonSpinner {...props} className={cls} />;
+
+  const spinnerColor = color ?? getSpinnerColor(variant);
+
+  return (
+    <UIButton.Spinner
+      {...(props as any)}
+      color={spinnerColor}
+      className={className}
+    />
+  );
 }
+
+// ---------------------------------------------------------------------------
+// Display names & compound export
+// ---------------------------------------------------------------------------
 
 AppButtonRoot.displayName = 'AppButton';
 AppButtonText.displayName = 'AppButton.Text';
-AppButtonIcon.displayName = 'AppButton.Icon';
 AppButtonSpinner.displayName = 'AppButton.Spinner';
 
 export const AppButton = Object.assign(AppButtonRoot, {
   Text: AppButtonText,
-  Icon: AppButtonIcon,
   Spinner: AppButtonSpinner,
 });
