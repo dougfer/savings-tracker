@@ -1,9 +1,9 @@
 {
-  "ai": "opencode",
+  "ai": "windsurf",
   "branch_numbering": "sequential",
-  "context_file": "AGENTS.md",
+  "context_file": ".windsurf/rules/specify-rules.md",
   "here": true,
-  "integration": "opencode",
-  "script": "sh",
+  "integration": "windsurf",
+  "script": "ps",
   "speckit_version": "0.8.13"
 }

@@ -2,14 +2,14 @@
   "version": "0.8.13",
   "integration_state_schema": 1,
   "installed_integrations": [
-    "opencode"
+    "windsurf"
   ],
   "integration_settings": {
-    "opencode": {
-      "script": "sh",
+    "windsurf": {
+      "script": "ps",
       "invoke_separator": "."
     }
   },
-  "integration": "opencode",
-  "default_integration": "opencode"
+  "integration": "windsurf",
+  "default_integration": "windsurf"
 }
