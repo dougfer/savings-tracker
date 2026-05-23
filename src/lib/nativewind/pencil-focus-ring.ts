@@ -13,3 +13,9 @@ export const pencilFocusRingWithBgClasses = [
   'data-[focus-visible=true]:bg-neutral-900',
   pencilFocusRingClasses,
 ].join(' ');
+
+/** Focus ring without bg - for Indicator subpart where bg is too large. */
+/** Subtle orange glow only - no dark outer ring, sized for 16×16 element. */
+export const pencilFocusRingNoBgClasses = [
+  'web:data-[focus-visible=true]:shadow-[0_0_0_2px_#FF5722]',
+].join(' ');

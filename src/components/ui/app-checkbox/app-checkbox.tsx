@@ -18,7 +18,7 @@ import { createCheckbox } from '@gluestack-ui/core/checkbox/creator';
 import { tva } from '@gluestack-ui/utils/nativewind-utils';
 import { cssInterop } from 'nativewind';
 
-import { pencilFocusRingWithBgClasses } from '@/lib/nativewind/pencil-focus-ring';
+import { pencilFocusRingNoBgClasses, pencilFocusRingWithBgClasses } from '@/lib/nativewind/pencil-focus-ring';
 import { withStates } from '@/lib/gluestack/with-states-interop';
 
 // ---------------------------------------------------------------------------
@@ -49,13 +49,17 @@ cssInterop(UICheckbox.Label, { className: 'style' } as any);
 // ---------------------------------------------------------------------------
 
 export const appCheckboxRootVariants = tva({
-  base: ['flex-row items-center gap-2', 'data-[disabled=true]:opacity-50'].join(' '),
+  base: [
+    'flex-row items-center gap-2',
+    'data-[disabled=true]:opacity-50',
+    'data-[focus-visible=true]:outline-none',
+  ].join(' '),
 });
 
 export const appCheckboxIndicatorVariants = tva({
   base: [
     'h-4 w-4 shrink-0 items-center justify-center rounded-full border border-neutral-500',
-    pencilFocusRingWithBgClasses,
+    pencilFocusRingNoBgClasses,
   ].join(' '),
 });
 
@@ -83,7 +87,11 @@ type AppCheckboxRootProps = Omit<PressableProps, 'children'> & {
 function AppCheckboxRoot({ className, children, ...props }: AppCheckboxRootProps) {
   const cls = appCheckboxRootVariants({ class: className });
   return (
-    <UICheckbox {...(props as any)} className={cls}>
+    <UICheckbox
+      {...(props as any)}
+      className={cls}
+      accessibilityRole="checkbox"
+    >
       {children}
     </UICheckbox>
   );
