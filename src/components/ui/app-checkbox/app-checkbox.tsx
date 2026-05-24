@@ -18,8 +18,8 @@ import { createCheckbox } from '@gluestack-ui/core/checkbox/creator';
 import { tva } from '@gluestack-ui/utils/nativewind-utils';
 import { cssInterop } from 'nativewind';
 
-import { pencilFocusRingNoBgClasses, pencilFocusRingWithBgClasses } from '@/lib/nativewind/pencil-focus-ring';
 import { withStates } from '@/lib/gluestack/with-states-interop';
+import { pencilFocusRingNoBgClasses, pencilFocusRingWithBgClasses } from '@/lib/nativewind/pencil-focus-ring';
 
 // ---------------------------------------------------------------------------
 // Gluestack Checkbox (headless)
@@ -65,7 +65,7 @@ export const appCheckboxIndicatorVariants = tva({
 
 const CHECKBOX_DOT_CLASS = 'h-2 w-2 rounded-full bg-orange-400';
 
-export const appCheckboxLabelClassName = 'font-sans-medium text-body text-neutral-300';
+export const appCheckboxLabelClassName = 'font-sans-medium text-body text-neutral-300 user-select-none';
 
 // ---------------------------------------------------------------------------
 // Compound wrappers (className only)
@@ -114,7 +114,7 @@ type AppCheckboxLabelProps = TextProps & { className?: string };
 
 function AppCheckboxLabel({ className, ...props }: AppCheckboxLabelProps) {
   const cls = [appCheckboxLabelClassName, className].filter(Boolean).join(' ');
-  return <UICheckbox.Label {...(props as any)} className={cls} />;
+  return <UICheckbox.Label {...(props as any)} className={cls} selectable={false} />;
 }
 
 // ---------------------------------------------------------------------------

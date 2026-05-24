@@ -1,0 +1,75 @@
+---
+description: Feature-first architecture — folder layout, kebab-case source files, imports, Expo Router
+globs: src/**/*
+alwaysApply: false
+---
+
+# Feature-first architecture
+
+**Goal:** keep **business rules, domain UI, and flows** inside `src/features/<name>/`, **`src/app` thin**, and **shared code** outside feature folders. Full contract: `specs/001-project-foundation/contracts/feature-module-layout.md`.
+
+## Principles
+
+- **One feature = one cohesive module** (overview, transactions, …); do not mix domains in the same folder.
+- **Routes only in `src/app`** — Expo Router files do not live under `features/`.
+- **No direct coupling between features** — do not import `src/features/<other>/...` from another feature; use `src/lib`, `src/services`, shared contracts, or integration mechanisms defined by the project.
+- **Rich screens in the feature**; **minimal routes** in `src/app` (short composition + screen re-export).
+
+## Example folder tree
+
+```text
+src/
+├── app/                          # Expo Router: routes and layouts only
+│   ├── _layout.tsx
+│   ├── index.tsx                 # may re-export a feature screen
+│   └── transactions/
+│       └── index.tsx             # ~1 line: re-export feature screen (see Source file naming)
+├── features/
+│   └── transactions/
+│       ├── screens/              # MUST: route targets (default export)
+│       ├── components/           # feature-only UI (not generic)
+│       ├── hooks/                # hooks whose semantics belong to this feature
+│       ├── services.ts|services/  # side effects / IO for this feature
+│       └── README.md             # optional: one-line purpose
+├── components/                   # cross-cutting UI (ui/, layout/, feedback/)
+├── lib/                          # utilities, providers, storage, shared schemas
+├── services/                     # global integrations (when they exist)
+├── stores/                       # global state (Zustand); slices per agreed domain
+└── hooks/                        # reusable hooks with no single feature owner
+```
+
+## What belongs where
+
+| Location | Contents |
+|----------|----------|
+| `src/app/**` | Routes, groups, layouts; delegate to `features/.../screens`. Avoid business logic. |
+| `features/<x>/screens` | Screens used as route `export default` targets. |
+| `features/<x>/components` | Feature-specific components (they do not replace `src/components/ui`). |
+| `features/<x>/hooks` | `useX` hooks that only make sense inside this feature. |
+| `features/<x>/services` | API calls, flow persistence, feature side effects. |
+| `src/components` | Design system and pieces reused across features. |
+| `src/lib` | Helpers, shared Zod schemas, clients, config with no single feature owner. |
+
+## Source file naming (`src/`)
+
+- Use **kebab-case** file stems: `example-given.tsx`, `app-text.tsx`, `overview-placeholder-screen.tsx`, `ui-preferences.store.ts`. Do **not** use PascalCase or camelCase filenames (`ExampleGiven.tsx`, `exampleGiven.tsx`).
+- **`index.ts` / `index.tsx`** — allowed for route entries and barrels.
+- **Colocated tests** — same stem + `.test`: `app-text.test.tsx`.
+- **Expo Router / framework exceptions** — keep required names literally (`_layout.tsx`, `+not-found.tsx`, `[id].tsx`, etc.); only the *optional* parts you add should still prefer kebab-case when not constrained by the framework.
+- **Exports vs filenames** — kebab-case on disk; exported React components remain **PascalCase** (and hooks **camelCase**) inside the file, per TypeScript / React conventions.
+- **Legacy** — existing non-kebab files MAY stay until refactored; **new** files under `src/` MUST follow this section.
+
+## Route → screen wiring (default pattern)
+
+Keep each route file in `src/app` short (ideally ≤ ~15 lines): local providers if needed + default export of the screen.
+
+```tsx
+// src/app/transactions/index.tsx
+export { default } from '@/features/transactions/screens/transactions-placeholder-screen';
+```
+
+## Best practices
+
+- Name feature folders in **kebab-case** aligned with routes (`recurring-bills`); avoid camelCase for the feature root folder (file stems: see **Source file naming** above).
+- Place **tests** next to code (`*.test.tsx` beside the component) or under `src/tests/` if the project standardizes that — stay consistent with existing layout.
+- Before adding a file, ask: **"Does it belong to a product domain?"** → feature; **"Is it generic or design-system?"** → `components` / `lib`.

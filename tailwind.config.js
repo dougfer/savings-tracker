@@ -110,6 +110,12 @@ module.exports = {
         '3xl': '24px',
         full: '9999px',
       },
+      userSelect: {
+        none: 'none',
+        text: 'text',
+        all: 'all',
+        auto: 'auto',
+      },
     },
   },
   plugins: [],
