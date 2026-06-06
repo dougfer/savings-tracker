@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
-import { Link } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 
-import { EyeOffIcon, EyeOnIcon, LogoIcon } from '@/assets/icons';
+import { Link } from 'expo-router';
+
+import { EyeOffIcon, EyeOnIcon, Logo } from '@/assets/icons';
 import { AppButton, AppInput } from '@/components/ui';
 
 export function LoginForm() {
@@ -16,15 +17,10 @@ export function LoginForm() {
   };
 
   return (
-    <View className="w-full gap-8 px-0 py-0">
+    <View className="w-full gap-8 p-0">
       <View className="gap-10">
-        <View className="flex-row items-center justify-center gap-2.5">
-          <View className="w-10 h-10 rounded-full items-center justify-center">
-            <LogoIcon width={30} height={24} />
-          </View>
-          <Text className="font-display text-heading-sm text-neutral-0">
-            Savings Tracker
-          </Text>
+        <View className="flex-row gap-2.5">
+          <Logo />
         </View>
 
         <View className="gap-2">
