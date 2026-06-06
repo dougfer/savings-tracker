@@ -33,8 +33,8 @@ import { useFocus, useFocusRing, useHover } from '@gluestack-ui/utils/aria';
 import { composeEventHandlers } from '@gluestack-ui/utils/common';
 import { tva } from '@gluestack-ui/utils/nativewind-utils';
 
-import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
 import { withStates } from '@/lib/gluestack/with-states-interop';
+import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
 
 // ---------------------------------------------------------------------------
 // Variants — Pencil node M8Qbp (Default / Hover / Focus)

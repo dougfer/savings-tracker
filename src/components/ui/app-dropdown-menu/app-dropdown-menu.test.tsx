@@ -6,55 +6,48 @@ import { render, screen, fireEvent } from '@testing-library/react-native';
 
 import { AppDropdownMenu } from './app-dropdown-menu';
 
-const EditIcon = () => null;
-
-jest.mock('@gluestack-ui/core/menu/creator', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
+jest.mock('@gluestack-ui/core/popover/creator', () => {
   const ReactNative = require('react-native');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const R = require('react');
 
   return {
-    createMenu: () => {
-      function FakeMenu({ trigger, children, ...props }: any) {
+    createPopover: () => {
+      function FakePopover({ trigger, children, ...props }: any) {
         return R.createElement(
           ReactNative.View,
           props,
-          trigger?.({ onPress: () => {} }, { open: false }),
+          trigger?.({ onPress: () => {}, 'aria-expanded': false, 'aria-haspopup': true }, { open: false }),
           children,
         );
       }
-      FakeMenu.Item = R.forwardRef(({ children, ...props }: any, ref: any) =>
-        R.createElement(ReactNative.Pressable, { ...props, ref }, children),
+      FakePopover.Content = R.forwardRef(({ children, ...props }: any, ref: any) =>
+        R.createElement(ReactNative.View, { ...props, ref }, children),
       );
-      FakeMenu.ItemLabel = R.forwardRef(({ children, ...props }: any, ref: any) =>
-        R.createElement(ReactNative.Text, { ...props, ref }, children),
+      FakePopover.Backdrop = R.forwardRef((props: any, ref: any) =>
+        R.createElement(ReactNative.Pressable, { ...props, ref }),
       );
-      FakeMenu.Separator = R.forwardRef((props: any, ref: any) =>
-        R.createElement(ReactNative.View, { ...props, ref }),
-      );
-      FakeMenu.displayName = 'Menu';
-      return FakeMenu;
+      FakePopover.displayName = 'Popover';
+      FakePopover.Content.displayName = 'Popover.Content';
+      FakePopover.Backdrop.displayName = 'Popover.Backdrop';
+      return FakePopover;
     },
   };
 });
 
 describe('AppDropdownMenu', () => {
-  describe('Trigger rendering', () => {
+  describe('Trigger', () => {
     it('renders trigger element', () => {
       render(
         <AppDropdownMenu>
           <AppDropdownMenu.Trigger>
-            {(triggerProps) => (
+            {(triggerProps: Record<string, unknown>) => (
               <Pressable {...triggerProps} testID="trigger">
                 <Text>Open</Text>
               </Pressable>
             )}
           </AppDropdownMenu.Trigger>
           <AppDropdownMenu.Content>
-            <AppDropdownMenu.Item key="edit" textValue="Edit">
-              <AppDropdownMenu.ItemLabel>Edit Goal</AppDropdownMenu.ItemLabel>
-            </AppDropdownMenu.Item>
+            <Text>Edit Goal</Text>
           </AppDropdownMenu.Content>
         </AppDropdownMenu>,
       );
@@ -66,16 +59,14 @@ describe('AppDropdownMenu', () => {
       render(
         <AppDropdownMenu>
           <AppDropdownMenu.Trigger>
-            {(triggerProps) => (
+            {(triggerProps: Record<string, unknown>) => (
               <Pressable {...triggerProps} testID="trigger">
                 <Text>Open</Text>
               </Pressable>
             )}
           </AppDropdownMenu.Trigger>
           <AppDropdownMenu.Content>
-            <AppDropdownMenu.Item key="edit" textValue="Edit">
-              <AppDropdownMenu.ItemLabel>Edit</AppDropdownMenu.ItemLabel>
-            </AppDropdownMenu.Item>
+            <Text>Edit</Text>
           </AppDropdownMenu.Content>
         </AppDropdownMenu>,
       );
@@ -84,37 +75,79 @@ describe('AppDropdownMenu', () => {
     });
   });
 
-  describe('Separator subpart', () => {
-    it('renders Separator without crashing', () => {
+  describe('Content', () => {
+    it('renders children inside Content', () => {
       render(
-        <View>
-          <AppDropdownMenu.Separator testID="separator" />
-        </View>,
-      );
-      expect(screen.getByTestId('separator')).toBeTruthy();
-    });
-  });
-
-  describe('ItemLabel subpart', () => {
-    it('renders ItemLabel text in isolation', () => {
-      render(
-        <View>
-          <AppDropdownMenu.ItemLabel>Edit Goal</AppDropdownMenu.ItemLabel>
-        </View>,
+        <AppDropdownMenu>
+          <AppDropdownMenu.Trigger>
+            {(triggerProps: Record<string, unknown>) => (
+              <Pressable {...triggerProps} testID="trigger">
+                <Text>Open</Text>
+              </Pressable>
+            )}
+          </AppDropdownMenu.Trigger>
+          <AppDropdownMenu.Content>
+            <Text>Edit Goal</Text>
+            <Text>Delete Goal</Text>
+          </AppDropdownMenu.Content>
+        </AppDropdownMenu>,
       );
       expect(screen.getByText('Edit Goal')).toBeTruthy();
+      expect(screen.getByText('Delete Goal')).toBeTruthy();
+    });
+
+    it('renders custom content inside Content', () => {
+      render(
+        <AppDropdownMenu>
+          <AppDropdownMenu.Trigger>
+            {(triggerProps: Record<string, unknown>) => (
+              <Pressable {...triggerProps} testID="trigger">
+                <Text>Open</Text>
+              </Pressable>
+            )}
+          </AppDropdownMenu.Trigger>
+          <AppDropdownMenu.Content>
+            <View testID="custom-view">
+              <Text>Custom Content</Text>
+            </View>
+          </AppDropdownMenu.Content>
+        </AppDropdownMenu>,
+      );
+      expect(screen.getByTestId('custom-view')).toBeTruthy();
+      expect(screen.getByText('Custom Content')).toBeTruthy();
     });
   });
 
-  describe('ItemIcon subpart', () => {
-    it('renders ItemIcon without crashing', () => {
-      expect(() =>
-        render(
-          <View>
-            <AppDropdownMenu.ItemIcon as={EditIcon} />
-          </View>,
-        ),
-      ).not.toThrow();
+  describe('Root', () => {
+    it('returns null when no Trigger child is provided', () => {
+      const { toJSON } = render(
+        <AppDropdownMenu>
+          <AppDropdownMenu.Content>
+            <Text>Content without trigger</Text>
+          </AppDropdownMenu.Content>
+        </AppDropdownMenu>,
+      );
+      expect(toJSON()).toBeNull();
+    });
+
+    it('renders successfully with Trigger and Content', () => {
+      const { toJSON } = render(
+        <AppDropdownMenu>
+          <AppDropdownMenu.Trigger>
+            {(triggerProps: Record<string, unknown>) => (
+              <Pressable {...triggerProps} testID="trigger">
+                <Text>Open</Text>
+              </Pressable>
+            )}
+          </AppDropdownMenu.Trigger>
+          <AppDropdownMenu.Content>
+            <Text>Content</Text>
+          </AppDropdownMenu.Content>
+        </AppDropdownMenu>,
+      );
+      expect(toJSON()).toBeTruthy();
+      expect(screen.getByText('Open')).toBeTruthy();
+      expect(screen.getByText('Content')).toBeTruthy();
     });
   });
 });

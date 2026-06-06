@@ -1,6 +1,7 @@
+import { Text, View } from 'react-native';
+
 import { AppScreen } from '@/components/layout/AppScreen';
-import { AppText, AppButton, AppInput, AppCheckbox } from '@/components/ui';
-import { OverviewHint } from '@/features/overview/components/OverviewHint';
+import { AppText, AppButton, AppInput, AppCheckbox, AppDropdownMenu } from '@/components/ui';
 
 export default function OverviewPlaceholderScreen() {
   return (
@@ -23,7 +24,21 @@ export default function OverviewPlaceholderScreen() {
         <AppCheckbox.Indicator />
         <AppCheckbox.Label>I agree to the terms</AppCheckbox.Label>
       </AppCheckbox>
-      <OverviewHint />
-    </AppScreen>
+      <AppDropdownMenu placement="bottom" offset={8}>
+        <AppDropdownMenu.Trigger>
+          {(triggerProps) => (
+            <AppButton {...triggerProps}>
+              <Text>Open</Text>
+            </AppButton>
+          )}
+        </AppDropdownMenu.Trigger>
+        <AppDropdownMenu.Content >
+          <View className='flex-1 bg-red-500 flex'>
+            <Text>Edit Goal</Text>
+            <Text>Delete Goal</Text>
+          </View>
+        </AppDropdownMenu.Content>
+      </AppDropdownMenu>
+    </AppScreen >
   );
 }

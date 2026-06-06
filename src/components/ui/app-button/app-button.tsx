@@ -8,7 +8,7 @@
  *
  * @see specs/003-shared-ui-components/quickstart.md — Button
  */
-import { Children, isValidElement, type ReactNode } from 'react';
+import { Children, forwardRef, isValidElement, type ReactNode } from 'react';
 
 import {
   ActivityIndicator,
@@ -23,8 +23,8 @@ import { createButton } from '@gluestack-ui/core/button/creator';
 import { tva, useStyleContext, withStyleContext } from '@gluestack-ui/utils/nativewind-utils';
 import { cssInterop } from 'nativewind';
 
-import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
 import { withStates } from '@/lib/gluestack/with-states-interop';
+import { pencilFocusRingClasses } from '@/lib/nativewind/pencil-focus-ring';
 
 // ---------------------------------------------------------------------------
 // Headless UI primitive via v3 creator
@@ -160,19 +160,26 @@ type AppButtonRootProps = Omit<PressableProps, 'children'> & {
   children?: ReactNode;
 };
 
-function AppButtonRoot({
-  variant = 'primary',
-  isDisabled = false,
-  isLoading = false,
-  className,
-  children,
-  ...props
-}: AppButtonRootProps) {
+const AppButtonRoot = forwardRef<
+  React.ComponentRef<typeof UIButton>,
+  AppButtonRootProps
+>(function AppButtonRoot(
+  {
+    variant = 'primary',
+    isDisabled = false,
+    isLoading = false,
+    className,
+    children,
+    ...props
+  },
+  ref,
+) {
   const effectiveDisabled = isDisabled || isLoading;
   const cls = appButtonRootVariants({ variant, class: className });
 
   return (
     <UIButton
+      ref={ref}
       {...(props as any)}
       context={{ variant, isLoading } satisfies AppButtonStyleContext}
       isDisabled={effectiveDisabled}
@@ -181,7 +188,7 @@ function AppButtonRoot({
       {normalizeButtonChildren(children)}
     </UIButton>
   );
-}
+});
 
 function AppButtonText({ className, ...props }: TextProps & { className?: string }) {
   const { variant } = useAppButtonStyle();
