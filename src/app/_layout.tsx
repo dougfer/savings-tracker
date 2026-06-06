@@ -8,6 +8,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 
+import { OverlayProvider } from '@gluestack-ui/core/overlay/creator';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { appFontsMap } from '@/lib/fonts/app-fonts';
@@ -31,8 +32,10 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <Stack screenOptions={{ title: 'Savings Tracker' }} />
-    </SafeAreaProvider>
+    <OverlayProvider>
+      <SafeAreaProvider>
+        <Stack screenOptions={{ title: 'Savings Tracker' }} />
+      </SafeAreaProvider>
+    </OverlayProvider>
   );
 }
