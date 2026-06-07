@@ -25,9 +25,9 @@
 
 **Purpose**: Types, mock data, and utility code that all components depend on
 
-- [ ] T001 [P] Create dashboard types (AccountSummary, MonthlyDeposit, DashboardData) in `src/features/overview/types/dashboard.ts`
-- [ ] T002 [P] Create currency formatter utility `formatCurrency` using `Intl.NumberFormat('pt-BR')` in `src/features/overview/utils/format-currency.ts`
-- [ ] T003 Create mock data (mockPopulatedDashboard with 12 months) in `src/features/overview/mocks/dashboard-data.ts`
+- [x] T001 [P] Create dashboard types (AccountSummary, MonthlyDeposit, DashboardData) in `src/features/overview/types/dashboard.ts`
+- [x] T002 [P] Create currency formatter utility `formatCurrency` using `Intl.NumberFormat('pt-BR')` in `src/features/overview/utils/format-currency.ts`
+- [x] T003 Create mock data (mockPopulatedDashboard with 12 months) in `src/features/overview/mocks/dashboard-data.ts`
 
 **Checkpoint**: Types, mocks, and utilities ready — component implementation can begin
 
@@ -41,11 +41,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T004 [P] [US1] Build `TotalSavingsCard` component with gradient background, label "Total savings", and formatted value in `src/features/overview/components/TotalSavingsCard.tsx`
-- [ ] T005 [P] [US1] Build `SummaryCard` generic component (props: `label`, `value`, `valueColor`, `showPattern`) with dark background and decorative SVG pattern in `src/features/overview/components/SummaryCard.tsx`
-- [ ] T006 [P] [US1] Build `BarChart` component using native Views (no external chart library) — proportional bar heights, value labels above, month labels below, in `src/features/overview/components/BarChart.tsx`
-- [ ] T007 [US1] Build `DashboardSummary` grid container composing TotalSavingsCard, SummaryCard (×2), and BarChart with responsive layout via `useResponsive()` in `src/features/overview/components/DashboardSummary.tsx`
-- [ ] T008 [US1] Update `dashboard-screen.tsx` to render `DashboardSummary` with `mockPopulatedDashboard` data in `src/features/overview/screens/dashboard-screen.tsx`
+- [x] T004 [P] [US1] Build `TotalSavingsCard` component with gradient background, label "Total savings", and formatted value in `src/features/overview/components/TotalSavingsCard.tsx`
+- [x] T005 [P] [US1] Build `SummaryCard` generic component (props: `label`, `value`, `valueColor`, `showPattern`) with dark background and decorative SVG pattern in `src/features/overview/components/SummaryCard.tsx`
+- [x] T006 [P] [US1] Build `BarChart` component using native Views (no external chart library) — proportional bar heights, value labels above, month labels below, in `src/features/overview/components/BarChart.tsx`
+- [x] T007 [US1] Build `DashboardSummary` grid container composing TotalSavingsCard, SummaryCard (×2), and BarChart with responsive layout via `useResponsive()` in `src/features/overview/components/DashboardSummary.tsx`
+- [x] T008 [US1] Update `dashboard-screen.tsx` to render `DashboardSummary` with `mockPopulatedDashboard` data in `src/features/overview/screens/dashboard-screen.tsx`
 
 **Checkpoint**: Dashboard fully functional with populated data — all cards render correct values, bar chart displays proportional bars, responsive grid adapts to viewport
 
@@ -59,10 +59,10 @@
 
 ### Implementation for User Story 2
 
-- [ ] T009 [P] [US2] Add empty state mock data (mockEmptyDashboard with all zeros) in `src/features/overview/mocks/dashboard-data.ts`
-- [ ] T010 [US2] Handle zero-value rendering in `BarChart` — bars with zero value render with height 0 (invisible but label remains) in `src/features/overview/components/BarChart.tsx`
-- [ ] T011 [US2] Handle zero-value rendering in `SummaryCard` — value "0" displayed with appropriate color in `src/features/overview/components/SummaryCard.tsx`
-- [ ] T012 [US2] Handle zero-value rendering in `TotalSavingsCard` — formatted "R$ 0,00" displayed in `src/features/overview/components/TotalSavingsCard.tsx`
+- [x] T009 [P] [US2] Add empty state mock data (mockEmptyDashboard with all zeros) in `src/features/overview/mocks/dashboard-data.ts`
+- [x] T010 [US2] Handle zero-value rendering in `BarChart` — bars with zero value render with height 0 (invisible but label remains) in `src/features/overview/components/BarChart.tsx`
+- [x] T011 [US2] Handle zero-value rendering in `SummaryCard` — value "0" displayed with appropriate color in `src/features/overview/components/SummaryCard.tsx`
+- [x] T012 [US2] Handle zero-value rendering in `TotalSavingsCard` — formatted "R$ 0,00" displayed in `src/features/overview/components/TotalSavingsCard.tsx`
 
 **Checkpoint**: Empty state renders correctly — all cards visible with zeroed values, chart has no bars but maintains structure
 
@@ -72,10 +72,10 @@
 
 **Purpose**: Improvements that affect multiple user stories and ensure constitution compliance
 
-- [ ] T013 [P] Verify all components use design tokens exclusively — no hardcoded style values (audit tailwind classes against `tailwind.config.js`) across all new files
-- [ ] T014 [P] Accessibility pass — ensure SummaryCard, TotalSavingsCard, and BarChart have appropriate `accessibilityRole`, `accessibilityLabel`, and semantic structure in `src/features/overview/components/`
-- [ ] T015 [P] Content review — verify labels match design ("Total savings", "Active goals", "Goals completed", "Monthly deposits") and are in English per the design in all component files
-- [ ] T016 Run quickstart.md validation — confirm all steps produce working dashboard across iOS, Android, and Web
+- [x] T013 [P] Verify all components use design tokens exclusively — no hardcoded style values (audit tailwind classes against `tailwind.config.js`) across all new files
+- [x] T014 [P] Accessibility pass — ensure SummaryCard, TotalSavingsCard, and BarChart have appropriate `accessibilityRole`, `accessibilityLabel`, and semantic structure in `src/features/overview/components/`
+- [x] T015 [P] Content review — verify labels match design ("Total savings", "Active goals", "Goals completed", "Monthly deposits") and are in English per the design in all component files
+- [x] T016 Run quickstart.md validation — confirm all steps produce working dashboard across iOS, Android, and Web
 
 ---
 

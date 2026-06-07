@@ -1,12 +1,14 @@
-import { Text, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
 
-import { OverviewHint } from '@/features/overview/components/OverviewHint';
+import { DashboardSummary } from '../components/dashboard-summary';
+import { mockPopulatedDashboard } from '../mocks/dashboard-data';
 
 export default function DashboardScreen() {
   return (
-    <View className="flex-1 items-center justify-center px-4">
-      <Text className="font-sans-bold text-heading-md text-neutral-0">Dashboard</Text>
-      <OverviewHint />
-    </View>
+    <ScrollView className="flex-1 bg-neutral-900">
+      <View className="gap-8 px-4 py-12 md:px-6 lg:px-0">
+        <DashboardSummary data={mockPopulatedDashboard} />
+      </View>
+    </ScrollView>
   );
 }
