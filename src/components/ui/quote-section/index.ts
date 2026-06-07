@@ -1,1 +1,1 @@
-export { QuoteSection } from './quote-section';
+export { QuoteSection } from "./quote-section";

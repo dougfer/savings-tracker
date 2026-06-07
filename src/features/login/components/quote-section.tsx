@@ -1,2 +1,1 @@
-export { QuoteSection } from '@/components/ui/quote-section';
-
+export { QuoteSection } from "@/components/ui/quote-section";
