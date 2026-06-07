@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Pressable, Text, View } from "react-native";
 
-import { Link } from "expo-router";
+import { router } from "expo-router";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -214,11 +214,13 @@ export function SignUpForm() {
           <Text className="font-sans-medium text-body text-neutral-300">
             Already have an account?
           </Text>
-          <Link href="/login" asChild>
-            <Pressable accessibilityRole="link" accessibilityLabel="Sign in, go to login screen">
-              <Text className="font-sans-semibold text-body text-orange-400">Sign in</Text>
-            </Pressable>
-          </Link>
+          <Pressable
+            onPress={() => router.back()}
+            accessibilityRole="link"
+            accessibilityLabel="Sign in, go to login screen"
+          >
+            <Text className="font-sans-semibold text-body text-orange-400">Sign in</Text>
+          </Pressable>
         </View>
       </View>
     </View>
