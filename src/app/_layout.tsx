@@ -7,6 +7,7 @@ import { Platform, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 
 import { OverlayProvider } from '@gluestack-ui/core/overlay/creator';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -34,6 +35,7 @@ export default function RootLayout() {
   return (
     <OverlayProvider>
       <SafeAreaProvider>
+        <StatusBar style="light" />
         <View className="flex-1 items-center bg-neutral-900">
           <View className="w-full max-w-[1600px] flex-1">
             <Stack screenOptions={{ title: 'Savings Tracker', headerShown: false }} />

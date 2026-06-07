@@ -7,3 +7,4 @@ export { AppDropdownMenu } from "./app-dropdown-menu";
 export { AppModal } from "./app-modal";
 export { AppText } from "./app-text";
 export { QuoteSection } from "./quote-section";
+export { Topbar } from "./topbar";
