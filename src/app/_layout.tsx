@@ -2,7 +2,7 @@ import '../../global.css';
 import 'react-native-reanimated';
 import { useEffect } from 'react';
 
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -34,7 +34,11 @@ export default function RootLayout() {
   return (
     <OverlayProvider>
       <SafeAreaProvider>
-        <Stack screenOptions={{ title: 'Savings Tracker' }} />
+        <View className="flex-1 items-center bg-neutral-900">
+          <View className="w-full max-w-[1600px] flex-1">
+            <Stack screenOptions={{ title: 'Savings Tracker', headerShown: false }} />
+          </View>
+        </View>
       </SafeAreaProvider>
     </OverlayProvider>
   );

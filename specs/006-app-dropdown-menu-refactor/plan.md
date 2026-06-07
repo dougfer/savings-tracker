@@ -1,23 +1,31 @@
-# Implementation Plan: AppDropdownMenu Refactor
+# Implementation Plan: [FEATURE]
 
-**Branch**: `refactor/app-dropdown-menu` | **Date**: 2026-05-24 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/specs/006-app-dropdown-menu-refactor/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+
+**Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Refatorar o componente `AppDropdownMenu` para maior aderência ao design system e alinhamento com a stack do projeto. A refatoração simplifica a API para o padrão Compound Components (Dropdown, Trigger, Content), remove React Context desnecessário usando data attributes para propagação de estado, e alinha a implementação ao padrão arquitetural estabelecido por AppInput/AppButton.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: TypeScript / React Native (Expo)  
-**Primary Dependencies**: `@gluestack-ui/core@^3.0.20` (createMenu), `@gluestack-ui/utils@^3.0.21`, NativeWind, React Native  
-**Storage**: N/A (UI component only)  
-**Testing**: Jest + @testing-library/react-native  
-**Target Platform**: iOS, Android, Web (cross-platform)  
-**Project Type**: Mobile-first React Native component library  
-**Performance Goals**: Menu open/close response under 100ms perceived latency  
-**Constraints**: Must use gluestack-ui core creators, no Context API for state, compound component pattern  
-**Scale/Scope**: Single component refactor (AppDropdownMenu)
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
+
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
@@ -25,49 +33,76 @@ Refatorar o componente `AppDropdownMenu` para maior aderência ao design system 
 
 Verificar conformidade com `.specify/memory/constitution.md` (Savings Tracker Platform):
 
-- **Produto:** Refatoração não introduz funcionalidade nova, apenas melhora consistência e manutenibilidade. Melhora indireta na clareza do código.
-- **Clareza e confiança:** API simplificada reduz ambiguidade de uso. Compound components com props claras.
-- **UX:** Componente refatorado mantém comportamento de menu existente. Melhora间接 em consistência visual.
-- **UI:**沿着AppButton/AppModal的样式模版，使用tva + withStates模式。Design tokens mantidos.
-- **Conteúdo:** N/A - sem impacto em conteúdo.
-- **Mobile-first:** Componente existente já mobile-first. Refatoração mantém layout responsivo.
-- **Acessibilidade:** GlueStack Menu creator já suporta keyboard navigation e accessibility. Refatoração mantém essas features.
-- **Performance:** Simplificação de código e remoção de Context overhead mejora performance.
-- **Técnico:** Código mais limpo: remove Context desnecessário, usa padrão established (tva/withStyleContext/withStates), melhor separação de responsabilidades.
-
-**Result**: PASS - All principles satisfied
+- **Produto:** Cada capacidade responde claramente “Isso ajuda o usuário a economizar melhor?”; escopo evita funcionalidade só por volume ou aparência.
+- **Clareza e confiança:** Dashboard e estados principais comunicam progresso, metas ativas/concluídas e depósitos recentes de forma imediata e consistente; sem ambiguidade aceitável em dados financeiros.
+- **UX:** Fluxos de criar meta, registrar depósito e acompanhar progresso minimizam passos; validação e erros são explícitos (sem “erro inesperado” como padrão).
+- **UI:** Hierarquia, progresso visual, contraste e consistência prevalecem sobre decoração; gráficos e barras servem à leitura.
+- **Conteúdo:** Textos orientam ação e estado; sem placeholders genéricos ou copy de protótipo na entrega.
+- **Mobile-first:** Layout e interação são concebidos primeiro para telas pequenas e uso com uma mão.
+- **Acessibilidade:** Teclado, foco visível, semântica, contraste, labels e leitores de tela; hover com equivalente de foco.
+- **Performance:** Carregamento e interação fluidos; evitar animação e renderização pesadas sem necessidade.
+- **Técnico:** Código legível, componentizado, separação lógica/apresentação, estados e validação de formulários tratados de forma profissional; sem hacks como solução final.
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/006-app-dropdown-menu-refactor/
-├── plan.md              # This file
-├── spec.md              # Feature specification
-├── research.md          # Phase 0 output (if needed)
-├── data-model.md        # N/A - no data entities
-├── quickstart.md        # Component usage guide
-└── checklists/
-    └── requirements.md  # Validation checklist
+specs/[###-feature]/
+├── plan.md              # This file (/speckit-plan command output)
+├── research.md          # Phase 0 output (/speckit-plan command)
+├── data-model.md        # Phase 1 output (/speckit-plan command)
+├── quickstart.md        # Phase 1 output (/speckit-plan command)
+├── contracts/           # Phase 1 output (/speckit-plan command)
+└── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-├── components/ui/
-│   ├── app-dropdown-menu/
-│   │   ├── app-dropdown-menu.tsx      # Refactored component
-│   │   ├── app-dropdown-menu.test.tsx # Updated tests
-│   │   └── index.ts                   # Export
-│   └── ... (other components unchanged)
+├── models/
+├── services/
+├── cli/
 └── lib/
-    └── gluestack/
-        └── with-states-interop.tsx    # Shared utility (already exists)
+
+tests/
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
+
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: AppDropdownMenu component refactored in-place. No new directories. Tests updated alongside implementation.
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
 ## Complexity Tracking
 
@@ -75,177 +110,5 @@ src/
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| None | N/A | N/A |
-
-## Phase 0: Research
-
-### Technical Analysis
-
-**Current Implementation Issues:**
-1. `AppDropdownMenuContext` is created but never used for meaningful state sharing - pure overhead
-2. Uses raw className concatenation instead of `tva` (tiny variance) pattern like AppButton
-3. No `withStyleContext` - context propagation would need Context API if expanded
-4. Compound components (Item, ItemLabel, ItemIcon, Separator) exposed but plan input specifies only Dropdown, Trigger, Content
-
-**GlueStack Menu Creator Behavior:**
-- `data-open="true"` on Root when menu is open
-- `data-highlighted="true"` on Item when focused/hovered  
-- Keyboard navigation (Arrow keys, Enter, Escape)
-- Auto-positioning (popover)
-- `states` prop emitted for data-[state=value]:className pattern resolution
-
-**Required Pattern (AppInput reference):**
-```tsx
-// Style context scope
-const MENU_SCOPE = 'APP_DROPDOWN_MENU';
-const StyledRoot = withStates(withStyleContext(View, MENU_SCOPE));
-const StyledContent = withStates(View);
-
-// tva variants
-export const appDropdownVariants = tva({
-  base: '... data-[open=true]:...',
-  variants: { ... }
-});
-
-// Usage in Root
-<uiMenu context={{ open, disabled }} className={cls}>
-```
-
-**Data Attributes Communication:**
-- No React Context for state sharing between Trigger and Content
-- State propagated via data-* attributes set by gluestack-ui creator
-- Components read state via withStates/withStyleContext pattern
-
-### Unknowns
-
-- [RESOLVED] Exact styling classes for Content (rounded corners, shadow, border) - using existing design tokens from current implementation
-- [RESOLVED] Whether to keep Item, ItemLabel, ItemIcon, Separator subcomponents - yes, they are used internally by gluestack Menu creator and can remain as implementation detail
-- [RESOLVED] Data attributes pattern compatibility with gluestack - creator already emits data-open, data-highlighted
-
-## Phase 1: Design
-
-### Component Architecture
-
-```
-AppDropdownMenu (Root - compound)
-├── AppDropdownMenu.Trigger (render prop pattern)
-└── AppDropdownMenu.Content (styled container)
-```
-
-**Public API (as per plan):**
-- `AppDropdownMenu` - Root accepting placement, offset, crossOffset, onOpen, onClose, closeOnSelect, className
-- `AppDropdownMenu.Trigger` - Render prop for trigger element
-- `AppDropdownMenu.Content` - Container for menu items with styling
-
-**Internal Structure (gluestack creator):**
-- `UIMenu` - Root from createMenu
-- `UIMenu.Item` - Menu items
-- `UIMenu.ItemLabel` - Item text labels
-- `UIMenu.Separator` - Visual dividers
-
-### Styling Pattern
-
-Following AppButton/AppInput pattern with `tva` + `withStyleContext` + `withStates`:
-
-```tsx
-const appDropdownContentVariants = tva({
-  base: [
-    'rounded-xl border border-border bg-card py-1 shadow-md',
-    'data-[open=true]:opacity-100',
-    'data-[closed=true]:opacity-0',
-  ].join(' '),
-});
-```
-
-### Data Flow
-
-1. Root receives props (placement, onOpen, onClose, etc.)
-2. Root renders UIMenu with trigger render prop and menu children
-3. UIMenu manages open/closed state internally via gluestack
-4. UIMenu emits `data-open` attribute on Root
-5. withStates resolves `data-[open=true]:` utility classes on native
-6. No React Context needed - gluestack creator handles state
-
-### Keyboard Navigation
-
-Gluestack Menu creator already provides:
-- Arrow key navigation between items
-- Enter to select
-- Escape to close
-- Focus management
-
-Accessibility maintained automatically by gluestack creator.
-
-## Phase 2: Implementation Tasks
-
-### Task 1: Setup and Imports
-- Import `withStyleContext`, `withStates`, `tva`, `useStyleContext` from @gluestack-ui/utils
-- Import `cssInterop` from nativewind
-- Keep `createMenu` from @gluestack-ui/core/menu/creator
-
-### Task 2: Define Style Scope and Variants
-- Create `MENU_SCOPE = 'APP_DROPDOWN_MENU'`
-- Define `appDropdownContentVariants` using tva pattern
-- Define `appDropdownItemVariants` for item styling
-
-### Task 3: Create Styled Wrappers
-- Wrap View with withStyleContext + withStates for Root
-- Wrap View for Content with styled variants
-
-### Task 4: Refactor AppDropdownMenuRoot
-- Remove `AppDropdownMenuContext` usage
-- Apply tva variants to className
-- Pass context to UIMenu for state propagation
-
-### Task 5: Simplify Trigger and Content
-- Keep Trigger as render prop pattern
-- Style Content with tva-based classes
-
-### Task 6: Update Tests
-- Update test file to match new structure
-- Test compound component pattern
-- Test data attributes state propagation
-
-### Task 7: Validate
-- Run TypeScript check
-- Run lint
-- Run tests
-- Visual verification (if design reference available)
-
-## Quickstart
-
-```tsx
-// Basic usage
-<AppDropdownMenu
-  placement="bottom right"
-  onOpen={() => console.log('opened')}
-  onClose={() => console.log('closed')}
->
-  <AppDropdownMenu.Trigger>
-    {(triggerProps) => (
-      <Pressable {...triggerProps}>
-        <Text>Open Menu</Text>
-      </Pressable>
-    )}
-  </AppDropdownMenu.Trigger>
-  <AppDropdownMenu.Content>
-    <UIMenu.Item>Edit</UIMenu.Item>
-    <UIMenu.Item>Delete</UIMenu.Item>
-  </AppDropdownMenu.Content>
-</AppDropdownMenu>
-```
-
-## Dependencies
-
-- `@gluestack-ui/core@^3.0.20` - createMenu creator
-- `@gluestack-ui/utils@^3.0.21` - tva, withStyleContext, withStates
-- `@expo/config-plugins` - already in project
-- `nativewind` - already in project
-
-## Risks and Mitigations
-
-| Risk | Mitigation |
-|------|------------|
-| data-* attributes not working on native | Test withStates resolution; already working in AppButton/AppInput |
-| Placement positioning off | Test on device; gluestack handles positioning |
-| Keyboard navigation broken | gluestack creator handles; verify with tests |
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

@@ -29,6 +29,7 @@ import CheckIcon from '@/assets/icons/check.svg';
 import ChevronLeftIcon from '@/assets/icons/chevron-left.svg';
 import CurrencyDollarIcon from '@/assets/icons/currency-dollar.svg';
 import FilterIcon from '@/assets/icons/filter-icon.svg';
+import LockIcon from '@/assets/icons/lock.svg';
 import Mail01Icon from '@/assets/icons/mail-01.svg';
 import PlusIcon from '@/assets/icons/plus.svg';
 import SortByIcon from '@/assets/icons/sort-by.svg';
@@ -45,6 +46,7 @@ const ICON_MAP = {
   'chevron-left': ChevronLeftIcon,
   'currency-dollar': CurrencyDollarIcon,
   'filter-icon': FilterIcon,
+  'lock': LockIcon,
   'mail-01': Mail01Icon,
   plus: PlusIcon,
   'sort-by': SortByIcon,
