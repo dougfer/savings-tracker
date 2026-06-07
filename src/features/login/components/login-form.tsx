@@ -43,7 +43,6 @@ export function LoginForm() {
             <AppInput.Field
               value={email}
               onChangeText={setEmail}
-              placeholder="Placeholder"
               keyboardType="email-address"
               autoCapitalize="none"
               autoComplete="email"
@@ -60,7 +59,6 @@ export function LoginForm() {
               <AppInput.Field
                 value={password}
                 onChangeText={setPassword}
-                placeholder="Placeholder"
                 secureTextEntry={!isPasswordVisible}
                 autoComplete="password"
                 textContentType="password"
@@ -82,7 +80,7 @@ export function LoginForm() {
             </AppInput.Group>
           </AppInput>
 
-          <Link href="/forgot-password/index" asChild>
+          <Link href="/forgot-password" asChild>
             <Pressable>
               <Text className="font-sans-medium text-body text-neutral-300 text-right">
                 Forgot password?
@@ -105,7 +103,7 @@ export function LoginForm() {
           <Text className="font-sans-medium text-body text-neutral-300">
             Don&apos;t have an account?
           </Text>
-          <Link href="/sign-up/index" asChild>
+          <Link href="/sign-up" asChild>
             <Pressable>
               <Text className="font-sans-semibold text-body text-orange-400">
                 Create one
