@@ -93,11 +93,10 @@ export function GoalCard({ goal, size = 'default' }: GoalCardProps) {
   const gradientId = useRef(`goalCardWideGradient-${++gradientCounter}`).current;
 
   const isWide = size === 'wide';
-  const { progress, percentage, state } = deriveState(goal.currentAmount, goal.targetAmount);
+  const { percentage, state } = deriveState(goal.currentAmount, goal.targetAmount);
   const isComplete = state === 'complete';
 
   const height = SIZE_HEIGHT[size];
-  const fillWidth = Math.round(cardWidth * progress);
   const dueDateFormatted = formatDueDate(goal.dueDate);
 
   const handleLayout = (e: LayoutChangeEvent) => {
@@ -159,9 +158,10 @@ export function GoalCard({ goal, size = 'default' }: GoalCardProps) {
 
         <View className="gap-4 flex-1 justify-end">
           <AppText
-            className={twMerge('font-display-semibold text-display-lg leading-none', percentageColor)}
+            className={twMerge('font-display-semibold leading-none', percentageColor)}
+            style={{ fontSize: 54 }}
           >
-            {percentage}
+            {percentage}%
           </AppText>
 
           <View
@@ -174,7 +174,7 @@ export function GoalCard({ goal, size = 'default' }: GoalCardProps) {
             <View className={twMerge('h-3 w-full rounded-full', progressTrack)}>
               <View
                 className={twMerge('h-3 rounded-lg border border-white/30', progressFill)}
-                style={{ width: fillWidth }}
+                style={{ width: `${percentage}%` }}
               />
             </View>
           </View>
