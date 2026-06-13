@@ -1,23 +1,21 @@
-import { createContext, useContext, type ReactNode } from 'react';
-
-import { Text, View, type TextProps, type ViewProps } from 'react-native';
+/**
+ * AppProgressBar — bar to visualize percentage progress (Pencil / design tokens).
+ *
+ * @example
+ * <AppProgressBar value={60} size="md" variant="default" />
+ *
+ * @example
+ * <AppProgressBar value={100} variant="success" label="Complete!" />
+ *
+ * @example
+ * <AppProgressBar value={75} variant="default" label />
+ *
+ * @see specs/003-shared-ui-components/quickstart.md — ProgressBar
+ */
+import { Text, View, type ViewProps } from 'react-native';
 
 type ProgressVariant = 'default' | 'success' | 'warning';
 type ProgressSize = 'xs' | 'sm' | 'md' | 'lg';
-
-type AppProgressBarCtx = {
-  value: number;
-  variant: ProgressVariant;
-  size: ProgressSize;
-};
-
-const AppProgressBarContext = createContext<AppProgressBarCtx | null>(null);
-
-function useAppProgressBarCtx(): AppProgressBarCtx {
-  const ctx = useContext(AppProgressBarContext);
-  if (!ctx) throw new Error('AppProgressBar subcomponents must be used inside <AppProgressBar>');
-  return ctx;
-}
 
 const trackHeightCls: Record<ProgressSize, string> = {
   xs: 'h-0.5',
@@ -32,68 +30,53 @@ const fillVariantCls: Record<ProgressVariant, string> = {
   warning: 'bg-warning',
 };
 
-type AppProgressBarRootProps = ViewProps & {
+type AppProgressBarProps = ViewProps & {
   value?: number;
   size?: ProgressSize;
   variant?: ProgressVariant;
+  label?: string | boolean;
   className?: string;
-  children?: ReactNode;
+  trackClassName?: string;
+  labelClassName?: string;
 };
 
-function AppProgressBarRoot({
+export function AppProgressBar({
   value = 0,
   size = 'md',
   variant = 'default',
+  label,
   className,
-  children,
+  trackClassName,
+  labelClassName,
   ...props
-}: AppProgressBarRootProps) {
+}: AppProgressBarProps) {
   const clamped = Math.min(100, Math.max(0, value));
-  const cls = ['w-full bg-muted rounded-full overflow-hidden', trackHeightCls[size], className]
+  const rootCls = ['w-full bg-muted rounded-full overflow-hidden', trackHeightCls[size], className]
     .filter(Boolean)
     .join(' ');
+  const trackCls = ['h-full rounded-full', fillVariantCls[variant], trackClassName]
+    .filter(Boolean)
+    .join(' ');
+  const labelCls = ['text-body-sm text-muted-foreground', labelClassName]
+    .filter(Boolean)
+    .join(' ');
+
+  const labelText = typeof label === 'string' ? label : `${clamped}%`;
+
   return (
-    <AppProgressBarContext.Provider value={{ value: clamped, variant, size }}>
-      <View
-        {...props}
-        className={cls}
-        role="progressbar"
-        accessibilityRole="progressbar"
-        aria-valuenow={clamped}
-        aria-valuemin={0}
-        aria-valuemax={100}
-      >
-        {children}
-      </View>
-    </AppProgressBarContext.Provider>
+    <View
+      {...props}
+      className={rootCls}
+      role="progressbar"
+      accessibilityRole="progressbar"
+      aria-valuenow={clamped}
+      aria-valuemin={0}
+      aria-valuemax={100}
+    >
+      <View className={trackCls} style={{ width: `${clamped}%` }} />
+      {label !== undefined && <Text className={labelCls}>{labelText}</Text>}
+    </View>
   );
 }
 
-type AppProgressBarTrackProps = ViewProps & { className?: string };
-
-function AppProgressBarTrack({ className, style, ...props }: AppProgressBarTrackProps) {
-  const { variant, value } = useAppProgressBarCtx();
-  const cls = ['h-full rounded-full', fillVariantCls[variant], className].filter(Boolean).join(' ');
-  return <View {...props} className={cls} style={[{ width: `${value}%` }, style]} />;
-}
-
-type AppProgressBarLabelProps = TextProps & { className?: string };
-
-function AppProgressBarLabel({ className, children, ...props }: AppProgressBarLabelProps) {
-  const { value } = useAppProgressBarCtx();
-  const cls = ['text-body-sm text-muted-foreground', className].filter(Boolean).join(' ');
-  return (
-    <Text {...props} className={cls}>
-      {children ?? `${value}%`}
-    </Text>
-  );
-}
-
-AppProgressBarRoot.displayName = 'AppProgressBar';
-AppProgressBarTrack.displayName = 'AppProgressBar.Track';
-AppProgressBarLabel.displayName = 'AppProgressBar.Label';
-
-export const AppProgressBar = Object.assign(AppProgressBarRoot, {
-  Track: AppProgressBarTrack,
-  Label: AppProgressBarLabel,
-});
+AppProgressBar.displayName = 'AppProgressBar';
