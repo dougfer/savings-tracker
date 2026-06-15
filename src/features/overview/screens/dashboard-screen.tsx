@@ -21,7 +21,7 @@ export default function DashboardScreen() {
       <View className="gap-6">
         <GoalsHeader title="Your goals" />
         {isEmpty ? (
-          <EmptyState showExampleCards={showExampleCards} exampleGoals={mockGoalsList} />
+          <EmptyState />
         ) : (
           <GoalsGrid goals={goals} />
         )}

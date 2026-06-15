@@ -3,16 +3,7 @@ import { Text, View } from 'react-native';
 import { PlusIcon } from '@/assets/icons';
 import { AppButton } from '@/components/ui/app-button';
 
-import type { Goal } from '../types/goal';
-
-import { GoalsGrid } from './goals-grid';
-
-type EmptyStateProps = {
-  showExampleCards: boolean;
-  exampleGoals: Goal[];
-};
-
-export function EmptyState({ showExampleCards, exampleGoals }: EmptyStateProps) {
+export function EmptyState() {
   return (
     <View className="rounded-2xl border border-neutral-600">
       <View className="gap-8 px-0 py-10 md:px-0 md:py-10 items-center">
@@ -29,12 +20,6 @@ export function EmptyState({ showExampleCards, exampleGoals }: EmptyStateProps) 
             </Text>
           </View>
         </View>
-
-        {showExampleCards && (
-          <View className="w-full px-4 md:px-10 opacity-50 pointer-events-none">
-            <GoalsGrid goals={exampleGoals} />
-          </View>
-        )}
 
         <View>
           <AppButton variant="primary">
