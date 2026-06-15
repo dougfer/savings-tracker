@@ -1,4 +1,4 @@
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 
 import { useResponsive } from '@/hooks/useResponsive';
 
@@ -16,18 +16,16 @@ export default function DashboardScreen() {
   const showExampleCards = isDesktop || isTablet;
 
   return (
-    <ScrollView className="flex-1 bg-neutral-900">
-      <View className="gap-8 px-4 py-12 md:px-6 lg:px-0">
-        <DashboardSummary data={mockPopulatedDashboard} />
-        <View className="gap-6">
-          <GoalsHeader title="Your goals" />
-          {isEmpty ? (
-            <EmptyState showExampleCards={showExampleCards} exampleGoals={mockGoalsList} />
-          ) : (
-            <GoalsGrid goals={goals} />
-          )}
-        </View>
+    <View className="gap-8 py-12">
+      <DashboardSummary data={mockPopulatedDashboard} />
+      <View className="gap-6">
+        <GoalsHeader title="Your goals" />
+        {isEmpty ? (
+          <EmptyState showExampleCards={showExampleCards} exampleGoals={mockGoalsList} />
+        ) : (
+          <GoalsGrid goals={goals} />
+        )}
       </View>
-    </ScrollView>
+    </View>
   );
 }
