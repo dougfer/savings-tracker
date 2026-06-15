@@ -5,7 +5,7 @@ import { AppButton } from '@/components/ui/app-button';
 
 export function Topbar() {
   return (
-    <View className="flex-row w-full items-center justify-between border-b border-neutral-800 border-x-0 py-3 px-4 md:h-20 md:py-4 md:px-6 lg:px-0">
+    <View className="flex-row w-full items-center justify-between border-b border-neutral-800 border-x-0 py-3 px-6 md:h-20 md:py-4 sm:px-4">
       <View
         className="flex-row items-center gap-2.5"
         accessibilityRole="header"

@@ -36,10 +36,8 @@ export default function RootLayout() {
     <OverlayProvider>
       <SafeAreaProvider>
         <StatusBar style="light" />
-        <View className="flex-1 items-center bg-neutral-900">
-          <View className="w-full max-w-[1600px] flex-1">
-            <Stack screenOptions={{ title: 'Savings Tracker', headerShown: false }} />
-          </View>
+        <View className="flex-1 bg-neutral-900">
+          <Stack screenOptions={{ title: 'Savings Tracker', headerShown: false }} />
         </View>
       </SafeAreaProvider>
     </OverlayProvider>
