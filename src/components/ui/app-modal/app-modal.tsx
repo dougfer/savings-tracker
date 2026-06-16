@@ -1,115 +1,118 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { Pressable, View, type PressableProps, type ViewProps } from 'react-native';
-
-import { createModal } from '@gluestack-ui/core/modal/creator';
-import { cssInterop } from 'nativewind';
+import { Modal, Pressable, View, type PressableProps, type ViewProps } from 'react-native';
 
 // ---------------------------------------------------------------------------
-// Headless UI primitive via v3 creator
-// ---------------------------------------------------------------------------
-
-const UIModal = createModal({
-  Root: View,
-  Content: View,
-  CloseButton: Pressable,
-  Header: View,
-  Footer: View,
-  Body: View,
-  Backdrop: Pressable,
-});
-
-cssInterop(UIModal, { className: 'style' } as any);
-cssInterop(UIModal.Content, { className: 'style' } as any);
-cssInterop(UIModal.Backdrop, { className: 'style' } as any);
-cssInterop(UIModal.CloseButton, { className: 'style' } as any);
-cssInterop(UIModal.Header, { className: 'style' } as any);
-cssInterop(UIModal.Body, { className: 'style' } as any);
-cssInterop(UIModal.Footer, { className: 'style' } as any);
-
-// ---------------------------------------------------------------------------
-// Variant / size maps
-// ---------------------------------------------------------------------------
-
-type ModalSize = 'sm' | 'md' | 'lg' | 'full';
-
-type AppModalCtx = { size: ModalSize };
-
-/** @internal Exported so tests can wrap subparts without requiring a full Modal portal */
-export const AppModalContext = createContext<AppModalCtx | null>(null);
-
-function useAppModalCtx(): AppModalCtx {
-  const ctx = useContext(AppModalContext);
-  if (!ctx) throw new Error('AppModal subcomponents must be used inside <AppModal>');
-  return ctx;
-}
-
-const sizeContentCls: Record<ModalSize, string> = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
-  full: 'w-full h-full rounded-none mx-0',
-};
-
-// ---------------------------------------------------------------------------
-// Compound components
+// Root
 // ---------------------------------------------------------------------------
 
 type AppModalRootProps = {
   isOpen: boolean;
   onClose: () => void;
-  size?: ModalSize;
   closeOnOverlayClick?: boolean;
   isKeyboardDismissable?: boolean;
-  avoidKeyboard?: boolean;
-  useRNModal?: boolean;
-  initialFocusRef?: React.RefObject<any>;
-  finalFocusRef?: React.RefObject<any>;
   className?: string;
   children?: ReactNode;
 };
 
-function AppModalRoot({ size = 'md', className, children, ...props }: AppModalRootProps) {
+function AppModalRoot({
+  isOpen,
+  onClose,
+  closeOnOverlayClick = false,
+  isKeyboardDismissable = true,
+  className,
+  children,
+}: AppModalRootProps) {
+  if (!isOpen) return null;
+
   return (
-    <UIModal {...(props as any)} className={className}>
-      <AppModalContext.Provider value={{ size }}>{children}</AppModalContext.Provider>
-    </UIModal>
+    <Modal
+      visible
+      transparent
+      animationType="fade"
+      onRequestClose={isKeyboardDismissable ? onClose : undefined}
+    >
+      <View
+        style={{ flex: 1 }}
+        className={['items-center justify-center px-6', className].filter(Boolean).join(' ')}
+      >
+        <Pressable
+          onPress={closeOnOverlayClick ? onClose : undefined}
+          style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}
+          className="bg-neutral-900/90 cursor-default"
+        />
+        {children}
+      </View>
+    </Modal>
   );
 }
 
+// ---------------------------------------------------------------------------
+// Backdrop (explicit — for consumers that need it)
+// ---------------------------------------------------------------------------
+
 function AppModalBackdrop({ className, ...props }: PressableProps & { className?: string }) {
-  const cls = ['bg-black/50', className].filter(Boolean).join(' ');
-  return <UIModal.Backdrop {...(props as any)} className={cls} />;
+  const cls = ['absolute inset-0 bg-black/50 cursor-default', className].filter(Boolean).join(' ');
+  return <Pressable {...props} className={cls} />;
 }
 
+// ---------------------------------------------------------------------------
+// Content
+// ---------------------------------------------------------------------------
+
 function AppModalContent({ className, ...props }: ViewProps & { className?: string }) {
-  const { size } = useAppModalCtx();
-  const cls = ['bg-card border border-border rounded-2xl mx-4', sizeContentCls[size], className]
+  const cls = [
+    'bg-neutral-800 border border-neutral-600 rounded-2xl mx-4',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
-  return <UIModal.Content {...(props as any)} className={cls} />;
+  return <View {...props} className={cls} />;
 }
+
+// ---------------------------------------------------------------------------
+// Header
+// ---------------------------------------------------------------------------
 
 function AppModalHeader({ className, ...props }: ViewProps & { className?: string }) {
   const cls = ['px-6 pt-6 pb-4 flex-row items-center justify-between', className]
     .filter(Boolean)
     .join(' ');
-  return <UIModal.Header {...(props as any)} className={cls} />;
+  return <View {...props} className={cls} />;
 }
+
+// ---------------------------------------------------------------------------
+// Body
+// ---------------------------------------------------------------------------
 
 function AppModalBody({ className, ...props }: ViewProps & { className?: string }) {
   const cls = ['px-6 pb-4', className].filter(Boolean).join(' ');
-  return <UIModal.Body {...(props as any)} className={cls} />;
+  return <View {...props} className={cls} />;
 }
+
+// ---------------------------------------------------------------------------
+// Footer
+// ---------------------------------------------------------------------------
 
 function AppModalFooter({ className, ...props }: ViewProps & { className?: string }) {
   const cls = ['px-6 pb-6 flex-row gap-3', className].filter(Boolean).join(' ');
-  return <UIModal.Footer {...(props as any)} className={cls} />;
+  return <View {...props} className={cls} />;
 }
 
+// ---------------------------------------------------------------------------
+// CloseButton
+// ---------------------------------------------------------------------------
+
 function AppModalCloseButton({ className, ...props }: PressableProps & { className?: string }) {
-  const cls = ['p-2 rounded-full data-[hover=true]:bg-muted', className].filter(Boolean).join(' ');
-  return <UIModal.CloseButton {...(props as any)} className={cls} />;
+  const cls = ['p-2 rounded-full', className].filter(Boolean).join(' ');
+  return (
+    <Pressable
+      {...props}
+      className={cls}
+      accessibilityRole="button"
+      accessibilityLabel="Close"
+    />
+  );
 }
 
 // ---------------------------------------------------------------------------
