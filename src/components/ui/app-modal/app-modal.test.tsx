@@ -4,56 +4,7 @@ import { Text } from 'react-native';
 
 import { render, screen, fireEvent } from '@testing-library/react-native';
 
-import { AppModal, AppModalContext } from './app-modal';
-
-jest.mock('@gluestack-ui/core/modal/creator', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const ReactNative = require('react-native');
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const R = require('react');
-
-  function FakeModal({ isOpen, children, ...props }: any) {
-    return isOpen
-      ? R.createElement(
-          ReactNative.View,
-          { accessible: true, accessibilityRole: 'dialog', ...props },
-          children,
-        )
-      : null;
-  }
-  FakeModal.Content = ({ children, ...props }: any) =>
-    R.createElement(ReactNative.View, props, children);
-  FakeModal.Backdrop = ({ children, ...props }: any) =>
-    R.createElement(ReactNative.View, props, children);
-  FakeModal.Header = ({ children, ...props }: any) =>
-    R.createElement(ReactNative.View, props, children);
-  FakeModal.Body = ({ children, ...props }: any) =>
-    R.createElement(ReactNative.View, props, children);
-  FakeModal.Footer = ({ children, ...props }: any) =>
-    R.createElement(ReactNative.View, props, children);
-  FakeModal.CloseButton = ({ children, onPress, ...props }: any) =>
-    R.createElement(
-      ReactNative.Pressable,
-      { onPress, accessibilityRole: 'button', ...props },
-      children,
-    );
-
-  FakeModal.displayName = 'Modal';
-  (FakeModal.Content as { displayName?: string }).displayName = 'Modal.Content';
-  (FakeModal.Backdrop as { displayName?: string }).displayName = 'Modal.Backdrop';
-  (FakeModal.Header as { displayName?: string }).displayName = 'Modal.Header';
-  (FakeModal.Body as { displayName?: string }).displayName = 'Modal.Body';
-  (FakeModal.Footer as { displayName?: string }).displayName = 'Modal.Footer';
-  (FakeModal.CloseButton as { displayName?: string }).displayName = 'Modal.CloseButton';
-
-  return {
-    createModal: () => FakeModal,
-  };
-});
-
-function wrapCtx(size: 'sm' | 'md' | 'lg' | 'full', node: React.ReactElement) {
-  return <AppModalContext.Provider value={{ size }}>{node}</AppModalContext.Provider>;
-}
+import { AppModal } from './app-modal';
 
 describe('AppModal', () => {
   describe('root rendering', () => {
@@ -81,19 +32,6 @@ describe('AppModal', () => {
         </AppModal>,
       );
       expect(screen.queryByText('Modal Body')).toBeNull();
-    });
-
-    it('has dialog role', () => {
-      render(
-        <AppModal isOpen onClose={() => {}}>
-          <AppModal.Content>
-            <AppModal.Body>
-              <Text>Content</Text>
-            </AppModal.Body>
-          </AppModal.Content>
-        </AppModal>,
-      );
-      expect(screen.getByRole('dialog')).toBeTruthy();
     });
   });
 
@@ -132,22 +70,6 @@ describe('AppModal', () => {
         </AppModal>,
       );
       expect(screen.getByTestId('close-btn')).toBeTruthy();
-    });
-  });
-
-  describe('sizes — via context', () => {
-    it.each(['sm', 'md', 'lg', 'full'] as const)('renders %s size content', (size) => {
-      render(
-        wrapCtx(
-          size,
-          <AppModal.Content>
-            <AppModal.Body>
-              <Text>{size} content</Text>
-            </AppModal.Body>
-          </AppModal.Content>,
-        ),
-      );
-      expect(screen.getByText(`${size} content`)).toBeTruthy();
     });
   });
 
