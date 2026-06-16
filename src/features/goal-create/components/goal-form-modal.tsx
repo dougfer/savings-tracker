@@ -6,7 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 
 import XCloseIcon from '@/assets/icons/x-close.svg';
-import { AppButton, AppInput, AppModal } from '@/components/ui';
+import { AppButton } from '@/components/ui/app-button';
+import { AppInput } from '@/components/ui/app-input';
+import { AppModal } from '@/components/ui/app-modal';
 
 import { createGoalSchema, type CreateGoalFormData } from '../schemas/create-goal.schema';
 
@@ -95,7 +97,7 @@ export function GoalFormModal({ isOpen, onClose }: GoalFormModalProps) {
     reset,
   } = useForm<CreateGoalFormData>({
     resolver: zodResolver(createGoalSchema),
-    mode: 'onSubmit',
+    mode: 'onBlur',
     defaultValues: {
       name: '',
       amount: 0,
@@ -104,12 +106,13 @@ export function GoalFormModal({ isOpen, onClose }: GoalFormModalProps) {
   });
 
   const handleClose = () => {
-    reset({ name: '', amount: 0, deadline: '' });
+    reset();
     onClose();
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (_data: CreateGoalFormData) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
+    // TODO: persist data to goals list
     handleClose();
   };
 

@@ -39,7 +39,7 @@ function AppModalRoot({
         <Pressable
           onPress={closeOnOverlayClick ? onClose : undefined}
           style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0 }}
-          className="bg-neutral-900/90"
+          className="bg-neutral-900/90 cursor-default"
         />
         {children}
       </View>
@@ -52,7 +52,7 @@ function AppModalRoot({
 // ---------------------------------------------------------------------------
 
 function AppModalBackdrop({ className, ...props }: PressableProps & { className?: string }) {
-  const cls = ['absolute inset-0 bg-black/50', className].filter(Boolean).join(' ');
+  const cls = ['absolute inset-0 bg-black/50 cursor-default', className].filter(Boolean).join(' ');
   return <Pressable {...props} className={cls} />;
 }
 
