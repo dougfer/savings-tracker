@@ -5,6 +5,7 @@ import { DepositHistory } from '../components/deposit-history';
 import { GoalInfoHeader } from '../components/goal-info-header';
 import { GoalProgressSection } from '../components/goal-progress-section';
 import type { GoalWithDeposits } from '../types/deposit';
+import { formatDisplayDate } from '../utils/format-date';
 
 interface GoalDetailsScreenProps {
   data: GoalWithDeposits;
@@ -23,20 +24,22 @@ export function GoalDetailsScreen({ data }: GoalDetailsScreenProps) {
     // TODO: Future integration - persist deposit and update goal data
   };
 
+  const deadlineFormatted = goal.dueDate ? formatDisplayDate(goal.dueDate) : undefined;
+
   return (
     <ScrollView className="flex-1" contentContainerClassName="gap-8 py-8">
       <GoalInfoHeader goal={goal} />
 
-      <View className="flex-col  desktop:flex-row gap-8 desktop:gap-12">
+      <View className="flex-col desktop:flex-row gap-8 desktop:gap-12">
         <View className="flex-1 desktop:flex-[2] gap-6 min-w-0">
-          <View className="rounded-2xl bg-neutral-800 p-6 border border-neutral-600">
-            <GoalProgressSection
-              percentage={percentage}
-              currentAmount={goal.currentAmount}
-              targetAmount={goal.targetAmount}
-              isCompleted={isCompleted}
-            />
-          </View>
+          <GoalProgressSection
+            percentage={percentage}
+            currentAmount={goal.currentAmount}
+            targetAmount={goal.targetAmount}
+            isCompleted={isCompleted}
+            depositsCount={deposits.length}
+            deadline={deadlineFormatted}
+          />
 
           {!isCompleted && (
             <View className="rounded-2xl bg-neutral-800 p-6 border border-neutral-600">
@@ -45,7 +48,7 @@ export function GoalDetailsScreen({ data }: GoalDetailsScreenProps) {
           )}
         </View>
 
-        <View className="flex-2 desktop:flex-1">
+        <View className="flex-2 desktop:flex-1 min-w-0 overflow-hidden">
           <DepositHistory deposits={deposits} />
         </View>
       </View>

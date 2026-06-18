@@ -5,13 +5,13 @@ import { router } from 'expo-router';
 import ChevronLeftIcon from '@/assets/icons/chevron-left.svg';
 import { AppButton } from '@/components/ui/app-button';
 import { GoalActions } from '@/features/goal-details/components/goal-actions';
-import { mockGoalInProgressWithDeposits, mockGoalCompletedWithDeposits } from '@/features/goal-details/mocks/deposit-data';
+import { mockGoalInProgressWithDeposits } from '@/features/goal-details/mocks/deposit-data';
 import { GoalDetailsScreen } from '@/features/goal-details/screens/goal-details-screen';
 
 export default function GoalDetailRoute() {
   return (
     <View className="flex-1 gap-6">
-      <View className="flex-row items-center justify-between">
+      <View className="flex-row items-center justify-between mt-8">
         <AppButton
           variant="tertiary"
           onPress={() => router.push('/')}
@@ -28,7 +28,7 @@ export default function GoalDetailRoute() {
         <GoalActions />
       </View>
 
-      <GoalDetailsScreen data={mockGoalCompletedWithDeposits} />
+      <GoalDetailsScreen data={mockGoalInProgressWithDeposits} />
     </View>
   );
 }

@@ -12,12 +12,8 @@ export function GoalActions() {
       >
         Edit
       </AppButton>
-      <AppButton
-        variant="tertiary"
-        accessibilityLabel="Delete goal"
-        className="h-10"
-      >
-        Delete
+      <AppButton variant="tertiary" accessibilityLabel="Delete goal" className="h-10">
+        <AppButton.Text className="text-red-500">Delete</AppButton.Text>
       </AppButton>
     </View>
   );
