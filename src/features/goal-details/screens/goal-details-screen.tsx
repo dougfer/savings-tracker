@@ -27,8 +27,8 @@ export function GoalDetailsScreen({ data }: GoalDetailsScreenProps) {
     <ScrollView className="flex-1" contentContainerClassName="gap-8 py-8">
       <GoalInfoHeader goal={goal} />
 
-      <View className="flex-col desktop:flex-row gap-8 desktop:gap-12">
-        <View className="flex-1 desktop:flex-[2] gap-6">
+      <View className="flex-col  desktop:flex-row gap-8 desktop:gap-12">
+        <View className="flex-1 desktop:flex-[2] gap-6 min-w-0">
           <View className="rounded-2xl bg-neutral-800 p-6 border border-neutral-600">
             <GoalProgressSection
               percentage={percentage}
@@ -45,7 +45,7 @@ export function GoalDetailsScreen({ data }: GoalDetailsScreenProps) {
           )}
         </View>
 
-        <View className="flex-1 rounded-2xl bg-neutral-800 p-6 border border-neutral-600">
+        <View className="flex-2 desktop:flex-1">
           <DepositHistory deposits={deposits} />
         </View>
       </View>

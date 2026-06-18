@@ -1,5 +1,6 @@
-import { ScrollView, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
+import { ArrowDownIcon } from '@/assets/icons';
 import { formatCurrency } from '@/utils/format-currency';
 
 import type { Deposit } from '../types/deposit';
@@ -20,46 +21,41 @@ export function DepositHistory({ deposits }: DepositHistoryProps) {
         <Text className="font-sans-semibold text-heading-sm text-neutral-0">
           Deposit history
         </Text>
-        <Text className="font-sans-medium text-body-sm text-neutral-400">
+        <Text className="font-sans-medium text-body-sm text-neutral-300">
           {deposits.length} {deposits.length === 1 ? 'deposit' : 'deposits'}
         </Text>
       </View>
 
       {sortedDeposits.length === 0 ? (
         <View className="py-8 items-center">
-          <Text className="font-sans-medium text-body text-neutral-400">
+          <Text className="font-sans-medium text-body-sm text-neutral-300">
             No deposits yet
           </Text>
         </View>
       ) : (
-        <ScrollView
-          className="max-h-80"
-          contentContainerClassName="gap-0"
-          showsVerticalScrollIndicator={false}
-        >
-          {sortedDeposits.map((deposit, index) => (
-            <View
-              key={deposit.id}
-              className={`flex-row items-center justify-between py-4 ${
-                index < sortedDeposits.length - 1
-                  ? 'border-b border-neutral-700'
-                  : ''
-              }`}
-            >
-              <View className="flex-1 gap-1">
-                <Text className="font-sans-medium text-body text-neutral-0">
-                  {deposit.description || 'Deposit'}
-                </Text>
-                <Text className="font-sans text-body-sm text-neutral-400">
-                  {formatDisplayDate(deposit.date)}
+        <View>
+          {sortedDeposits.map((deposit) => (
+            <View key={deposit.id}>
+              <View className="h-px bg-neutral-800" />
+              <View className="flex-row items-center py-4">
+                <View className="size-10 rounded-full bg-neutral-800 items-center justify-center">
+                  <ArrowDownIcon width={20} height={20} color="#B7B7B7" />
+                </View>
+                <View className="flex-1 ml-3 gap-0.5">
+                  <Text className="font-sans-medium text-body-sm text-neutral-0" numberOfLines={1}>
+                    {deposit.description || 'Monthly savings'}
+                  </Text>
+                  <Text className="font-sans text-body-sm text-neutral-300">
+                    {formatDisplayDate(deposit.date)}
+                  </Text>
+                </View>
+                <Text className="font-sans-semibold text-body-semibold text-success ml-3">
+                  +{formatCurrency(deposit.amount)}
                 </Text>
               </View>
-              <Text className="font-sans-semibold text-amount text-neutral-0">
-                {formatCurrency(deposit.amount)}
-              </Text>
             </View>
           ))}
-        </ScrollView>
+        </View>
       )}
     </View>
   );

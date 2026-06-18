@@ -1,10 +1,11 @@
 import { Text, View } from 'react-native';
+
 import { router } from 'expo-router';
 
 import ChevronLeftIcon from '@/assets/icons/chevron-left.svg';
 import { AppButton } from '@/components/ui/app-button';
 import { GoalActions } from '@/features/goal-details/components/goal-actions';
-import { mockGoalInProgressWithDeposits } from '@/features/goal-details/mocks/deposit-data';
+import { mockGoalInProgressWithDeposits, mockGoalCompletedWithDeposits } from '@/features/goal-details/mocks/deposit-data';
 import { GoalDetailsScreen } from '@/features/goal-details/screens/goal-details-screen';
 
 export default function GoalDetailRoute() {
@@ -27,7 +28,7 @@ export default function GoalDetailRoute() {
         <GoalActions />
       </View>
 
-      <GoalDetailsScreen data={mockGoalInProgressWithDeposits} />
+      <GoalDetailsScreen data={mockGoalCompletedWithDeposits} />
     </View>
   );
 }
