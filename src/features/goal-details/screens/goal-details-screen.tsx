@@ -27,7 +27,7 @@ export function GoalDetailsScreen({ data }: GoalDetailsScreenProps) {
   const deadlineFormatted = goal.dueDate ? formatDisplayDate(goal.dueDate) : undefined;
 
   return (
-    <ScrollView className="flex-1" contentContainerClassName="gap-8 py-8">
+    <ScrollView className="flex-1" contentContainerClassName="gap-8 py-4">
       <GoalInfoHeader goal={goal} />
 
       <View className="flex-col desktop:flex-row gap-8 desktop:gap-12">
