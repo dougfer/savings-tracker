@@ -13,7 +13,7 @@ export default function LoggedLayout() {
         <Topbar />
       </View>
       <ScrollView className="flex-1 bg-neutral-900">
-        <View className="w-full max-w-[1600px] self-center px-6 sm:px-4">
+        <View className="w-full max-w-[1600px] self-center px-6 tablet:px-4">
           <Slot />
         </View>
       </ScrollView>

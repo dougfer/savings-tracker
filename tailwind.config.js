@@ -11,6 +11,10 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
   theme: {
+    screens: {
+      tablet: '768px',
+      desktop: '1024px',
+    },
     extend: {
       colors: {
         ink: '#02012C',

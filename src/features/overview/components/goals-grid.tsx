@@ -65,7 +65,7 @@ function DesktopGrid({ goals }: GoalsGridProps) {
   const rows = chunkGoalsForDesktop(goals);
 
   return (
-    <View className="hidden lg:flex lg:flex-col lg:gap-6">
+    <View className="hidden desktop:flex desktop:flex-col desktop:gap-6">
       {rows.map((row) =>
         row.mirrored ? (
           <View key={row.leftWide.id} className="flex-row gap-6">
@@ -116,7 +116,7 @@ function TabletGrid({ goals }: GoalsGridProps) {
   }
 
   return (
-    <View className="hidden md:flex md:flex-col lg:hidden gap-6">
+    <View className="hidden tablet:flex tablet:flex-col desktop:hidden gap-6">
       {rows.map((row) => (
         <View key={row[0].id} className="flex-col gap-6">
           {row.length > 0 && (
@@ -143,7 +143,7 @@ function TabletGrid({ goals }: GoalsGridProps) {
 
 function MobileGrid({ goals }: GoalsGridProps) {
   return (
-    <View className="flex md:hidden flex-col gap-6">
+    <View className="flex tablet:hidden flex-col gap-6">
       {goals.map((goal, index) => (
         <NavigableGoalCard
           key={goal.id}

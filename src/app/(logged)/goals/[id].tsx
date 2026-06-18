@@ -1,21 +1,33 @@
 import { Text, View } from 'react-native';
 
-import { useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 
-export default function GoalDetailScreen() {
-  const { id } = useLocalSearchParams<{ id: string }>();
+import ChevronLeftIcon from '@/assets/icons/chevron-left.svg';
+import { AppButton } from '@/components/ui/app-button';
+import { GoalActions } from '@/features/goal-details/components/goal-actions';
+import { mockGoalInProgressWithDeposits } from '@/features/goal-details/mocks/deposit-data';
+import { GoalDetailsScreen } from '@/features/goal-details/screens/goal-details-screen';
 
+export default function GoalDetailRoute() {
   return (
-    <View className="flex-1 bg-neutral-900 items-center justify-center gap-4">
-      <Text className="text-white font-display-semibold text-heading-md">
-        Goal Detail
-      </Text>
-      <Text className="text-neutral-400 font-sans text-body-sm">
-        ID: {id}
-      </Text>
-      <Text className="text-neutral-500 font-sans text-caption mt-4">
-        (Mock data — implementation pending)
-      </Text>
+    <View className="flex-1">
+      <View className="flex-row items-center justify-between mt-8">
+        <AppButton
+          variant="tertiary"
+          onPress={() => router.push('/')}
+          accessibilityLabel="Back to overview"
+          className="px-0 desktop:px-4"
+        >
+          <ChevronLeftIcon width={20} height={20} color="#B7B7B7" />
+          <Text className="font-sans-medium text-body text-neutral-300">
+            Back
+          </Text>
+        </AppButton>
+
+        <GoalActions />
+      </View>
+
+      <GoalDetailsScreen data={mockGoalInProgressWithDeposits} />
     </View>
   );
 }

@@ -1,5 +1,6 @@
 export { AppButton } from "./app-button";
 export { AppCheckbox } from "./app-checkbox";
+export { AppCurrencyInput } from "./app-currency-input";
 export { AppInput } from "./app-input";
 export { AppAvatar } from "./app-avatar";
 export { AppProgressBar } from "./app-progress-bar";

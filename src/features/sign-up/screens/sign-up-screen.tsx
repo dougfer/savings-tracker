@@ -6,12 +6,12 @@ import { SignUpForm } from "../components/sign-up-form";
 
 export default function SignUpScreen() {
   return (
-    <View className="w-full flex-1 flex-col items-center bg-neutral-900 px-4 py-10 md:px-16 lg:flex-row lg:gap-20 lg:p-10">
+    <View className="w-full flex-1 flex-col items-center bg-neutral-900 px-4 py-10 tablet:px-16 desktop:flex-row desktop:gap-20 desktop:p-10">
       <QuoteSection
         quote={`"Do not save what is left after spending, but spend what \nis left after saving."`}
         attribution="– Warren Buffett"
       />
-      <View className="w-full lg:max-w-screen-sm lg:shrink-0">
+      <View className="w-full desktop:max-w-screen-tablet desktop:shrink-0">
         <SignUpForm />
       </View>
     </View>
