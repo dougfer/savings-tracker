@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { Text, View } from 'react-native';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,6 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import XCloseIcon from '@/assets/icons/x-close.svg';
 import { AppButton } from '@/components/ui/app-button';
+import { AppCurrencyInput } from '@/components/ui/app-currency-input';
 import { AppInput } from '@/components/ui/app-input';
 import { AppModal } from '@/components/ui/app-modal';
 
@@ -15,78 +14,6 @@ import { createGoalSchema, type CreateGoalFormData } from '../schemas/create-goa
 interface GoalFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-}
-
-interface CurrencyAmountFieldProps {
-  value: number;
-  onChange: (value: number) => void;
-  onBlur: () => void;
-  isInvalid: boolean;
-  isSubmitting: boolean;
-  errorMessage?: string;
-}
-
-const DECIMAL_PLACES = 2;
-
-const formatter = new Intl.NumberFormat('en-US', {
-  minimumFractionDigits: DECIMAL_PLACES,
-  maximumFractionDigits: DECIMAL_PLACES,
-});
-
-function digitsToAmount(digits: string): number {
-  const padded = digits.padStart(DECIMAL_PLACES + 1, '0');
-  const intPart = padded.slice(0, -DECIMAL_PLACES);
-  const decPart = padded.slice(-DECIMAL_PLACES);
-  return parseFloat(`${intPart}.${decPart}`);
-}
-
-function digitsToDisplay(digits: string): string {
-  if (digits.length === 0) return '';
-  return formatter.format(digitsToAmount(digits));
-}
-
-function CurrencyAmountField({
-  value,
-  onChange,
-  onBlur,
-  isInvalid,
-  isSubmitting,
-  errorMessage,
-}: CurrencyAmountFieldProps) {
-  const rawDigits =
-    value > 0 ? value.toFixed(DECIMAL_PLACES).replace('.', '') : '';
-
-  const displayValue = useMemo(() => digitsToDisplay(rawDigits), [rawDigits]);
-
-  const handleChangeText = (text: string) => {
-    const digits = text.replace(/\D/g, '');
-    onChange(digits.length > 0 ? digitsToAmount(digits) : 0);
-  };
-
-  return (
-    <AppInput>
-      <AppInput.Label>Target amount</AppInput.Label>
-      <AppInput.Group isInvalid={isInvalid}>
-        <AppInput.Slot name="currency-dollar" />
-        <AppInput.Field
-          value={displayValue}
-          onChangeText={handleChangeText}
-          keyboardType="decimal-pad"
-          onBlur={onBlur}
-          placeholder="0.00"
-          editable={!isSubmitting}
-          accessibilityLabel="Target amount"
-        />
-      </AppInput.Group>
-      {errorMessage && (
-        <View accessibilityLiveRegion="assertive">
-          <AppInput.HelperText variant="error">
-            {errorMessage}
-          </AppInput.HelperText>
-        </View>
-      )}
-    </AppInput>
-  );
 }
 
 export function GoalFormModal({ isOpen, onClose }: GoalFormModalProps) {
@@ -123,9 +50,9 @@ export function GoalFormModal({ isOpen, onClose }: GoalFormModalProps) {
       closeOnOverlayClick
       isKeyboardDismissable
     >
-      <AppModal.Content className="max-w-[680px] w-full md:max-w-[680px] sm:max-w-[343px] p-8 md:p-8 sm:px-5 sm:py-4">
+      <AppModal.Content className="max-w-[680px] w-full p-8">
         <View className="flex-row items-center justify-between mb-4">
-          <Text className="font-sans-semibold text-xl md:text-xl sm:text-2xl text-neutral-0">
+          <Text className="font-sans-semibold text-xl text-neutral-0">
             New goal
           </Text>
           <AppModal.CloseButton onPress={handleClose}>
@@ -165,13 +92,14 @@ export function GoalFormModal({ isOpen, onClose }: GoalFormModalProps) {
             control={control}
             name="amount"
             render={({ field: { onChange, onBlur, value } }) => (
-              <CurrencyAmountField
+              <AppCurrencyInput
                 value={value}
                 onChange={onChange}
                 onBlur={onBlur}
                 isInvalid={!!errors.amount}
-                isSubmitting={isSubmitting}
+                editable={!isSubmitting}
                 errorMessage={errors.amount?.message}
+                label="Target amount"
               />
             )}
           />

@@ -26,7 +26,7 @@ export function QuoteSection({ quote, attribution }: QuoteSectionProps) {
 
   return (
     <View
-      className="relative hidden h-full max-w-[45%] flex-1 justify-center overflow-hidden rounded-2xl border border-white/30 px-10 py-5 lg:flex"
+      className="relative hidden h-full max-w-[45%] flex-1 justify-center overflow-hidden rounded-2xl border border-white/30 px-10 py-5 desktop:flex"
       onLayout={onLayout}
     >
       {size.width > 0 && (

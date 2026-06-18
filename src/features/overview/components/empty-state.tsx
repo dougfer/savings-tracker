@@ -12,7 +12,7 @@ export function EmptyState() {
   return (
     <>
       <View className="rounded-2xl border border-neutral-600">
-        <View className="gap-8 px-0 py-10 md:px-0 md:py-10 items-center">
+        <View className="gap-8 px-0 py-10 items-center">
           <View className="gap-5 items-center">
             <View className="size-10 rounded-full bg-neutral-800 items-center justify-center">
               <PlusIcon width={24} height={24} color="#B7B7B7" />
