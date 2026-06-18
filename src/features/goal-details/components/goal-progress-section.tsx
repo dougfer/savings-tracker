@@ -1,11 +1,9 @@
-import { useRef, useState } from 'react';
+import { Text, View } from 'react-native';
 
-import { Text, View, type LayoutChangeEvent } from 'react-native';
-
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { twMerge } from "tailwind-merge"
 
 import { CheckIcon } from '@/assets/icons';
+import { GradientContainer } from '@/components/ui/gradient-container';
 import { formatCurrency } from '@/utils/format-currency';
 
 interface GoalProgressSectionProps {
@@ -17,8 +15,6 @@ interface GoalProgressSectionProps {
   deadline?: string;
 }
 
-let gradientCounter = 0;
-
 function CompletedCard({
   currentAmount,
   depositsCount,
@@ -28,39 +24,13 @@ function CompletedCard({
   depositsCount: number;
   deadline?: string;
 }) {
-  const [size, setSize] = useState({ width: 0, height: 0 });
-  const gradientId = useRef(`goal-complete-${++gradientCounter}`).current;
-
-  const onLayout = (e: LayoutChangeEvent) => {
-    const { width, height } = e.nativeEvent.layout;
-    if (width > 0 && height > 0) {
-      setSize({ width, height });
-    }
-  };
-
   const description = [
     `You saved ${formatCurrency(currentAmount)} across ${depositsCount} ${depositsCount === 1 ? 'deposit' : 'deposits'}.`,
     deadline ? `Finished before your ${deadline} deadline.` : '',
   ].filter(Boolean).join(' ');
 
   return (
-    <View className="rounded-2xl overflow-hidden border border-white/30" onLayout={onLayout}>
-      {size.width > 0 && (
-        <Svg
-          width={size.width}
-          height={size.height}
-          style={{ position: 'absolute', top: 0, left: 0 }}
-        >
-          <Defs>
-            <LinearGradient id={gradientId} x1="0.5" y1="0" x2="0.5" y2="1">
-              <Stop offset="0" stopColor="#FF5722" stopOpacity="1" />
-              <Stop offset="1" stopColor="#B92B09" stopOpacity="1" />
-            </LinearGradient>
-          </Defs>
-          <Rect x="0" y="0" width={size.width} height={size.height} fill={`url(#${gradientId})`} />
-        </Svg>
-      )}
-
+    <GradientContainer>
       <View className="gap-10 py-12 px-6">
         <View className="gap-6 items-start">
           <View className="size-16 rounded-full bg-white/30 items-center justify-center">
@@ -100,7 +70,7 @@ function CompletedCard({
           </View>
         </View>
       </View>
-    </View>
+    </GradientContainer>
   );
 }
 

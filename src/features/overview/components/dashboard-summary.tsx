@@ -1,10 +1,13 @@
 import { View } from 'react-native';
 
 import { useResponsive } from '@/hooks/useResponsive';
-import { TotalSavingsCard } from './total-savings-card';
-import { SummaryCard } from './summary-card';
-import { BarChart } from './bar-chart';
+
 import type { DashboardData } from '../types/dashboard';
+
+import { BarChart } from './bar-chart';
+import { SummaryCard } from './summary-card';
+import { TotalSavingsCard } from './total-savings-card';
+
 
 type DashboardSummaryProps = {
   data: DashboardData;

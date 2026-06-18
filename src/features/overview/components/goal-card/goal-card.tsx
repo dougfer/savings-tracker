@@ -1,13 +1,13 @@
-import { useRef, useState } from 'react';
+import { type ReactNode } from 'react';
 
-import { type LayoutChangeEvent, View } from 'react-native';
+import { View } from 'react-native';
 
 import { format, parseISO, isValid } from 'date-fns';
-import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { twMerge } from 'tailwind-merge';
 
 import { VectorPatternIcon } from '@/assets/icons';
 import { AppText } from '@/components/ui/app-text';
+import { GradientContainer } from '@/components/ui/gradient-container';
 
 import type { Goal, GoalSize } from '../../types/goal';
 import { formatCurrency } from '../../utils/format-currency';
@@ -16,8 +16,6 @@ type GoalCardProps = {
   goal: Goal;
   size?: GoalSize;
 };
-
-let gradientCounter = 0;
 
 function deriveState(currentAmount: number, targetAmount: number) {
   const safeTarget = targetAmount > 0 ? targetAmount : 1;
@@ -89,9 +87,6 @@ function formatDueDate(dueDate: string | null): string | null {
 }
 
 export function GoalCard({ goal, size = 'default' }: GoalCardProps) {
-  const [cardWidth, setCardWidth] = useState(0);
-  const gradientId = useRef(`goalCardWideGradient-${++gradientCounter}`).current;
-
   const isWide = size === 'wide';
   const { percentage, state } = deriveState(goal.currentAmount, goal.targetAmount);
   const isComplete = state === 'complete';
@@ -99,46 +94,16 @@ export function GoalCard({ goal, size = 'default' }: GoalCardProps) {
   const height = SIZE_HEIGHT[size];
   const dueDateFormatted = formatDueDate(goal.dueDate);
 
-  const handleLayout = (e: LayoutChangeEvent) => {
-    const w = e.nativeEvent.layout.width;
-    if (w > 0) setCardWidth(w);
-  };
-
-  const cardBg = twMerge(DEFAULT_CLASSES.cardBg, isWide && WIDE_CLASSES.cardBg);
-  const cardBorder = twMerge(DEFAULT_CLASSES.cardBorder, isWide && WIDE_CLASSES.cardBorder);
   const percentageColor = isWide ? WIDE_CLASSES.percentageColor : PERCENTAGE_COLOR[state];
   const progressTrack = isWide ? WIDE_CLASSES.progressTrack : DEFAULT_CLASSES.progressTrack;
   const progressFill = isWide ? WIDE_CLASSES.progressFill : PROGRESS_FILL[state];
   const stateLabel = STATE_LABEL[state];
 
-  return (
-    <View
-      className={twMerge('overflow-hidden rounded-2xl border p-6', cardBg, cardBorder)}
-      style={{ height }}
-      onLayout={handleLayout}
-      accessibilityRole="summary"
-      accessibilityLabel={`${goal.name || 'Untitled goal'}: ${percentage}% ${stateLabel}`}
-    >
-      {isWide && (
-        <Svg
-          width={cardWidth || 1}
-          height={height}
-          style={{ position: 'absolute', top: 0, left: 0 }}
-        >
-          <Defs>
-            <LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-              <Stop offset="0" stopColor="#FF5722" stopOpacity="1" />
-              <Stop offset="1" stopColor="#B92B09" stopOpacity="1" />
-            </LinearGradient>
-          </Defs>
-          <Rect x="0" y="0" width={cardWidth || 1} height={height} fill={`url(#${gradientId})`} />
-        </Svg>
-      )}
-
+  const content: ReactNode = (
+    <>
       <View className="pointer-events-none absolute -bottom-24 -right-14 opacity-[0.03]">
         <VectorPatternIcon width={200} height={200} color="#FFFFFF" />
       </View>
-
       <View className="gap-6 flex-1 justify-end">
         <View className="flex-row items-center gap-2.5">
           <AppText
@@ -194,6 +159,33 @@ export function GoalCard({ goal, size = 'default' }: GoalCardProps) {
           )}
         </View>
       </View>
+    </>
+  );
+
+  if (isWide) {
+    return (
+      <GradientContainer
+        viewProps={{
+          style: { height },
+          accessibilityRole: 'summary',
+          accessibilityLabel: `${goal.name || 'Untitled goal'}: ${percentage}% ${stateLabel}`,
+        }}
+      >
+        <View className="p-6 flex-1">
+          {content}
+        </View>
+      </GradientContainer>
+    );
+  }
+
+  return (
+    <View
+      className="overflow-hidden rounded-2xl border border-neutral-600 bg-neutral-800 p-6"
+      style={{ height }}
+      accessibilityRole="summary"
+      accessibilityLabel={`${goal.name || 'Untitled goal'}: ${percentage}% ${stateLabel}`}
+    >
+      {content}
     </View>
   );
 }
